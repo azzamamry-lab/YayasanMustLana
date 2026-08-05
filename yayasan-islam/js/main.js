@@ -7,7 +7,7 @@
    Ganti URL foto berikut dengan foto dokumentasi yayasan Anda.
    ====================================================================== */
 const WHATSAPP_NUMBER = "6282147975947"; // format internasional tanpa "+"
-const WHATSAPP_MESSAGE = "Assalamu'alaikum, saya ingin bertanya/donasi ke Yayasan Al-Hidayah.";
+const WHATSAPP_MESSAGE = "Assalamu'alaikum, saya ingin bertanya/donasi ke Yayasan Mustaqbal Lana.";
 
 const ALBUMS = {
   sosial: [
