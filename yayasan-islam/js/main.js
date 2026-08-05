@@ -1,15 +1,80 @@
 /* ==========================================================================
-   Yayasan Islam Mustaqbal Lana — interaksi halaman
+   Yayasan Islam Mustaqbal Lana — interaksi halaman + config.json loader
    ========================================================================== */
 
 /* ======================================================================
-   1. KONFIGURASI KONTEN
-   Ganti URL foto berikut dengan foto dokumentasi yayasan Anda.
+   0. LOAD CONFIG.JSON (menggantikan hardcode)
    ====================================================================== */
-const WHATSAPP_NUMBER = "6282147975947"; // format internasional tanpa "+"
+let CONFIG = {};
+
+(async function loadSiteConfig() {
+  try {
+    const res = await fetch('config.json');
+    CONFIG = await res.json();
+    console.log('✅ Config loaded:', CONFIG);
+    applyConfig();
+  } catch(e) {
+    console.warn('⚠ Gagal load config.json, pakai fallback.', e);
+  }
+})();
+
+function applyConfig() {
+  // Hero
+  const h1 = document.querySelector('.hero-title');
+  if (h1 && CONFIG.hero) {
+    const t = CONFIG.hero.title || h1.textContent;
+    h1.innerHTML = t;
+  }
+  const heroSub = document.querySelector('.hero-sub');
+  if (heroSub && CONFIG.hero) heroSub.textContent = CONFIG.hero.subtitle || heroSub.textContent;
+
+  // Stats
+  if (CONFIG.stats) {
+    document.querySelectorAll('[data-count]').forEach(el => {
+      if (el.closest('.stat:nth-child(1)') && CONFIG.stats.years) el.dataset.count = CONFIG.stats.years;
+      if (el.closest('.stat:nth-child(2)') && CONFIG.stats.santri) el.dataset.count = CONFIG.stats.santri;
+      if (el.closest('.stat:nth-child(3)') && CONFIG.stats.relawan) el.dataset.count = CONFIG.stats.relawan;
+      if (el.closest('.stat:nth-child(4)') && CONFIG.stats.programs) el.dataset.count = CONFIG.stats.programs;
+    });
+  }
+
+  // Videos
+  if (CONFIG.videos) {
+    const featuredVideo = CONFIG.videos.find(v => v.featured) || CONFIG.videos[0];
+    const sideVideos = CONFIG.videos.filter(v => !v.featured).slice(0, 2);
+    const iframes = document.querySelectorAll('#video iframe');
+    if (featuredVideo && iframes[0]) {
+      iframes[0].src = `https://www.youtube-nocookie.com/embed/${featuredVideo.youtube_id}`;
+    }
+    sideVideos.forEach((v, i) => {
+      if (iframes[i+1]) iframes[i+1].src = `https://www.youtube-nocookie.com/embed/${v.youtube_id}`;
+    });
+  }
+
+  // Gallery — load dari config
+  if (CONFIG.gallery) {
+    window.ALBUMS = CONFIG.gallery;
+  }
+
+  // WhatsApp
+  if (CONFIG.contact) {
+    const waNum = CONFIG.contact.whatsapp || '6282147975947';
+    const waMsg = CONFIG.contact.whatsapp_message || "Assalamu'alaikum, saya ingin bertanya/donasi ke Yayasan Mustaqbal Lana.";
+    const waLink = `https://wa.me/${waNum}?text=${encodeURIComponent(waMsg)}`;
+    const waFloat = document.querySelector('#waFloat');
+    const donasiWa = document.querySelector('#donasiWa');
+    if (waFloat) waFloat.href = waLink;
+    if (donasiWa) donasiWa.href = waLink;
+  }
+}
+
+/* ======================================================================
+   1. KONFIGURASI KONTEN (fallback)
+   ====================================================================== */
+const WHATSAPP_NUMBER = "6282147975947";
 const WHATSAPP_MESSAGE = "Assalamu'alaikum, saya ingin bertanya/donasi ke Yayasan Mustaqbal Lana.";
 
-const ALBUMS = {
+const ALBUMS_FALLBACK = {
   sosial: [
     { src: "https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?auto=format&fit=crop&w=900&q=70", caption: "Santunan anak yatim — Ramadan 1447 H", tag: "Kemanusiaan" },
     { src: "https://images.unsplash.com/photo-1593113598332-cd288d649433?auto=format&fit=crop&w=900&q=70", caption: "Distribusi paket sembako untuk warga dhuafa", tag: "Sosial" },
@@ -27,6 +92,9 @@ const ALBUMS = {
     { src: "https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?auto=format&fit=crop&w=900&q=70", caption: "Pekan literasi santri di perpustakaan", tag: "Literasi" }
   ]
 };
+
+// Gunakan config jika ada, fallback ke hardcode
+window.ALBUMS = window.ALBUMS || ALBUMS_FALLBACK;
 
 /* ======================================================================
    2. UTILITAS
@@ -102,8 +170,11 @@ lbImg.onerror = function () {
   this.src = "https://picsum.photos/seed/lb" + currentAlbum + currentIndex + "/900/675";
 };
 
+const getAlbums = () => window.ALBUMS || ALBUMS_FALLBACK;
+
 const renderGallery = (albumKey) => {
-  const items = ALBUMS[albumKey];
+  const items = getAlbums()[albumKey];
+  if (!items) return;
   currentAlbum = albumKey;
   galleryGrid.innerHTML = items
     .map(
@@ -136,7 +207,7 @@ const closeLightbox = () => {
 };
 
 const updateLightbox = () => {
-  const items = ALBUMS[currentAlbum];
+  const items = getAlbums()[currentAlbum];
   const item = items[currentIndex];
   lbImg.src = item.src;
   lbImg.alt = item.caption;
@@ -144,7 +215,7 @@ const updateLightbox = () => {
 };
 
 const step = (dir) => {
-  const items = ALBUMS[currentAlbum];
+  const items = getAlbums()[currentAlbum];
   currentIndex = (currentIndex + dir + items.length) % items.length;
   updateLightbox();
 };

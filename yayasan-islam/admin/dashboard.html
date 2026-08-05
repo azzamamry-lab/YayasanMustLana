@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard Admin — Yayasan Mustaqbal Lana</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+      background: #f1f5f9;
+      color: #0f172a;
+      min-height: 100vh;
+    }
+    .topbar {
+      background: #0f766e;
+      color: white;
+      padding: 16px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    .topbar h1 { font-size: 18px; font-weight: 700; }
+    .topbar .actions { display: flex; gap: 12px; }
+    .btn {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.2s;
+    }
+    .btn-primary { background: white; color: #0f766e; }
+    .btn-primary:hover { background: #e2e8f0; }
+    .btn-secondary { background: transparent; color: white; border: 1.5px solid rgba(255,255,255,0.3); }
+    .btn-secondary:hover { background: rgba(255,255,255,0.1); }
+    .btn-danger { background: #ef4444; color: white; }
+    .btn-danger:hover { background: #dc2626; }
+    .btn-success { background: #22c55e; color: white; }
+    .btn-success:hover { background: #16a34a; }
+
+    .container { max-width: 900px; margin: 0 auto; padding: 32px 24px; }
+    .card {
+      background: white;
+      border-radius: 16px;
+      padding: 28px;
+      margin-bottom: 24px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    }
+    .card h2 { font-size: 20px; font-weight: 700; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+    .card h2 svg { width: 22px; height: 22px; color: #0f766e; }
+
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+    .form-group { margin-bottom: 16px; }
+    .form-group label { display: block; font-size: 13px; font-weight: 600; color: #475569; margin-bottom: 6px; }
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 10px;
+      font-size: 14px;
+      font-family: inherit;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .form-group input:focus,
+    .form-group textarea:focus { border-color: #0f766e; }
+    .form-group textarea { min-height: 80px; resize: vertical; }
+
+    .video-list { display: flex; flex-direction: column; gap: 12px; }
+    .video-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: #f8fafc;
+      padding: 12px 16px;
+      border-radius: 10px;
+      border: 1px solid #e2e8f0;
+    }
+    .video-item input { flex: 1; }
+    .video-item .badge {
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+    .badge-featured { background: #fef3c7; color: #92400e; }
+    .badge-normal { background: #e2e8f0; color: #475569; }
+
+    .gallery-section { margin-bottom: 24px; }
+    .gallery-section h3 { font-size: 16px; font-weight: 700; margin-bottom: 12px; color: #334155; }
+    .photo-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 12px;
+    }
+    .photo-card {
+      background: #f8fafc;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .photo-card img { width: 100%; height: 100px; object-fit: cover; }
+    .photo-card .photo-info { padding: 10px; }
+    .photo-card .photo-info input { width: 100%; padding: 6px 8px; font-size: 12px; border: 1px solid #e2e8f0; border-radius: 6px; margin-bottom: 4px; }
+    .photo-card .photo-actions { display: flex; gap: 6px; margin-top: 6px; }
+    .btn-xs { padding: 4px 10px; font-size: 11px; border-radius: 6px; border: none; cursor: pointer; font-family: inherit; font-weight: 600; }
+
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #0f172a;
+      color: white;
+      padding: 14px 24px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 600;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.3s;
+      pointer-events: none;
+      z-index: 100;
+    }
+    .toast.show { opacity: 1; transform: translateY(0); }
+    .toast.success { background: #22c55e; }
+    .toast.error { background: #ef4444; }
+
+    .preview-link { font-size: 13px; color: #0f766e; text-decoration: none; font-weight: 600; }
+    .preview-link:hover { text-decoration: underline; }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+    .status-ok { background: #dcfce7; color: #166534; }
+    .status-modified { background: #fef3c7; color: #92400e; }
+
+    .commit-info {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 12px 16px;
+      font-size: 13px;
+      color: #64748b;
+      margin-top: 12px;
+    }
+    .commit-info code { background: #e2e8f0; padding: 2px 6px; border-radius: 4px; font-size: 12px; }
+  </style>
+</head>
+<body>
+
+<div class="topbar">
+  <h1>🕌 Panel Admin — Yayasan Mustaqbal Lana</h1>
+  <div class="actions">
+    <span id="statusBadge" class="status-badge status-ok">✅ Tersimpan</span>
+    <button class="btn btn-secondary" onclick="window.open('../', '_blank')">👁 Lihat Website</button>
+    <button class="btn btn-primary" id="btnSave" onclick="saveAll()">💾 Simpan Semua</button>
+    <button class="btn btn-secondary" onclick="logout()">🚪 Keluar</button>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- Hero -->
+  <div class="card">
+    <h2>🦸‍♂️ Hero / Beranda</h2>
+    <div class="form-group">
+      <label>Judul Utama</label>
+      <input id="heroTitle" />
+    </div>
+    <div class="form-group">
+      <label>Sub-judul</label>
+      <textarea id="heroSubtitle"></textarea>
+    </div>
+    <div class="form-group">
+      <label>URL Gambar Hero</label>
+      <input id="heroImage" placeholder="https://images.unsplash.com/..." />
+    </div>
+  </div>
+
+  <!-- Tentang -->
+  <div class="card">
+    <h2>📖 Tentang Yayasan</h2>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Judul Bagian</label>
+        <input id="aboutTitle" />
+      </div>
+      <div class="form-group">
+        <label>Tahun Berdiri</label>
+        <input id="aboutYear" type="number" />
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Deskripsi</label>
+      <textarea id="aboutDesc"></textarea>
+    </div>
+    <div class="form-group">
+      <label>Heading</label>
+      <input id="aboutHeading" />
+    </div>
+    <div class="form-group">
+      <label>Isi</label>
+      <textarea id="aboutBody"></textarea>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Visi</label>
+        <textarea id="aboutVisi"></textarea>
+      </div>
+      <div class="form-group">
+        <label>Misi</label>
+        <textarea id="aboutMisi"></textarea>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>URL Gambar Tentang</label>
+      <input id="aboutImage" />
+    </div>
+  </div>
+
+  <!-- Statistik -->
+  <div class="card">
+    <h2>📊 Statistik</h2>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Tahun Mengabdi</label>
+        <input id="statsYears" type="number" />
+      </div>
+      <div class="form-group">
+        <label>Santri Terbina</label>
+        <input id="statsSantri" type="number" />
+      </div>
+      <div class="form-group">
+        <label>Pengajar & Relawan</label>
+        <input id="statsRelawan" type="number" />
+      </div>
+      <div class="form-group">
+        <label>Program Aktif</label>
+        <input id="statsPrograms" type="number" />
+      </div>
+    </div>
+  </div>
+
+  <!-- Program -->
+  <div class="card">
+    <h2>🎯 Program</h2>
+    <div class="form-group">
+      <label>Judul Bagian</label>
+      <input id="progTitle" />
+    </div>
+    <div class="form-group">
+      <label>Sub-judul</label>
+      <input id="progSubtitle" />
+    </div>
+    <div id="programItems"></div>
+  </div>
+
+  <!-- Video YouTube -->
+  <div class="card">
+    <h2>🎬 Video YouTube</h2>
+    <div class="video-list" id="videoList"></div>
+    <button class="btn btn-secondary" style="margin-top:12px" onclick="addVideo()">+ Tambah Video</button>
+  </div>
+
+  <!-- Galeri -->
+  <div class="card">
+    <h2>🖼 Galeri Foto</h2>
+    <div id="gallerySections"></div>
+  </div>
+
+  <!-- Kontak -->
+  <div class="card">
+    <h2>📞 Kontak & Donasi</h2>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Alamat</label>
+        <textarea id="contactAddress"></textarea>
+      </div>
+      <div class="form-group">
+        <label>Email</label>
+        <input id="contactEmail" type="email" />
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>No. Telepon</label>
+        <input id="contactPhone" />
+      </div>
+      <div class="form-group">
+        <label>No. WhatsApp (628xxx)</label>
+        <input id="contactWa" />
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Pesan WhatsApp Default</label>
+      <input id="contactWaMsg" />
+    </div>
+    <div class="form-group">
+      <label>Judul Donasi</label>
+      <input id="donasiTitle" />
+    </div>
+    <div class="form-group">
+      <label>Deskripsi Donasi</label>
+      <textarea id="donasiDesc"></textarea>
+    </div>
+  </div>
+
+  <!-- Sosial Media -->
+  <div class="card">
+    <h2>🌐 Sosial Media</h2>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Instagram URL</label>
+        <input id="socialIg" placeholder="https://instagram.com/..." />
+      </div>
+      <div class="form-group">
+        <label>YouTube URL</label>
+        <input id="socialYt" placeholder="https://youtube.com/..." />
+      </div>
+      <div class="form-group">
+        <label>Facebook URL</label>
+        <input id="socialFb" placeholder="https://facebook.com/..." />
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="card">
+    <h2>📝 Footer</h2>
+    <div class="form-group">
+      <label>Quote</label>
+      <input id="footerQuote" />
+    </div>
+    <div class="form-group">
+      <label>Sumber Quote</label>
+      <input id="footerQuoteSrc" />
+    </div>
+  </div>
+
+  <!-- Password -->
+  <div class="card">
+    <h2>🔐 Keamanan</h2>
+    <div class="form-group">
+      <label>Password Admin Baru</label>
+      <input id="adminPassword" type="password" placeholder="Kosongkan jika tidak ingin mengubah..." />
+    </div>
+    <p style="font-size:12px;color:#64748b;margin-top:-8px">Password disimpan di config.json. Default: mustaqbal2024</p>
+  </div>
+
+  <!-- Commit Info -->
+  <div class="commit-info">
+    📌 Perubahan akan disimpan ke <code>config.json</code>. Website publik otomatis membaca file ini.
+    Untuk auto-deploy, gunakan GitHub Actions — setiap push ke <code>main</code> akan memicu deploy ulang.
+  </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ==================== AUTH CHECK ====================
+if (sessionStorage.getItem('yayasan_admin_auth') !== 'true') {
+  window.location.href = 'index.html';
+}
+
+// ==================== LOAD CONFIG ====================
+let config = {};
+let originalConfig = '';
+
+async function loadConfig() {
+  try {
+    const res = await fetch('../config.json?t=' + Date.now());
+    config = await res.json();
+    originalConfig = JSON.stringify(config);
+    populateForm();
+  } catch(e) {
+    showToast('Gagal memuat config.json', 'error');
+  }
+}
+
+// ==================== POPULATE FORM ====================
+function populateForm() {
+  // Hero
+  setVal('heroTitle', config.hero?.title);
+  setVal('heroSubtitle', config.hero?.subtitle);
+  setVal('heroImage', config.hero?.image);
+
+  // About
+  setVal('aboutTitle', config.about?.title);
+  setVal('aboutDesc', config.about?.description);
+  setVal('aboutHeading', config.about?.heading);
+  setVal('aboutBody', config.about?.body);
+  setVal('aboutVisi', config.about?.visi);
+  setVal('aboutMisi', config.about?.misi);
+  setVal('aboutImage', config.about?.image);
+  setVal('aboutYear', config.about?.year_established);
+
+  // Stats
+  setVal('statsYears', config.stats?.years);
+  setVal('statsSantri', config.stats?.santri);
+  setVal('statsRelawan', config.stats?.relawan);
+  setVal('statsPrograms', config.stats?.programs);
+
+  // Programs
+  setVal('progTitle', config.programs?.title);
+  setVal('progSubtitle', config.programs?.subtitle);
+  renderPrograms();
+
+  // Videos
+  renderVideos();
+
+  // Gallery
+  renderGallery();
+
+  // Contact
+  setVal('contactAddress', config.contact?.address);
+  setVal('contactEmail', config.contact?.email);
+  setVal('contactPhone', config.contact?.phone);
+  setVal('contactWa', config.contact?.whatsapp);
+  setVal('contactWaMsg', config.contact?.whatsapp_message);
+  setVal('donasiTitle', config.donasi?.title);
+  setVal('donasiDesc', config.donasi?.description);
+
+  // Social
+  setVal('socialIg', config.social?.instagram);
+  setVal('socialYt', config.social?.youtube);
+  setVal('socialFb', config.social?.facebook);
+
+  // Footer
+  setVal('footerQuote', config.footer?.quote);
+  setVal('footerQuoteSrc', config.footer?.quote_source);
+}
+
+function setVal(id, val) {
+  const el = document.getElementById(id);
+  if (el && val !== undefined && val !== null) el.value = val;
+}
+
+function getVal(id) {
+  const el = document.getElementById(id);
+  return el ? el.value : '';
+}
+
+// ==================== PROGRAMS ====================
+function renderPrograms() {
+  const items = config.programs?.items || [];
+  const container = document.getElementById('programItems');
+  container.innerHTML = items.map((p, i) => `
+    <div class="form-row" style="align-items:end">
+      <div class="form-group">
+        <label>Judul Program ${i+1}</label>
+        <input class="prog-item-title" data-idx="${i}" value="${escHtml(p.title)}" />
+      </div>
+      <div class="form-group">
+        <label>Tags</label>
+        <input class="prog-item-tags" data-idx="${i}" value="${escHtml(p.tags)}" />
+      </div>
+      <button class="btn btn-danger btn-xs" style="margin-bottom:16px" onclick="removeProgram(${i})">✕</button>
+    </div>
+    <div class="form-group">
+      <label>Deskripsi</label>
+      <textarea class="prog-item-desc" data-idx="${i}">${escHtml(p.description)}</textarea>
+    </div>
+  `).join('');
+}
+
+function removeProgram(idx) {
+  config.programs.items.splice(idx, 1);
+  renderPrograms();
+  markModified();
+}
+
+// ==================== VIDEOS ====================
+function renderVideos() {
+  const videos = config.videos || [];
+  const container = document.getElementById('videoList');
+  container.innerHTML = videos.map((v, i) => `
+    <div class="video-item">
+      <span style="font-weight:700;min-width:24px">${i+1}.</span>
+      <input class="vid-id" data-idx="${i}" value="${escHtml(v.youtube_id)}" placeholder="YouTube ID" />
+      <input class="vid-title" data-idx="${i}" value="${escHtml(v.title)}" placeholder="Judul video" style="flex:2" />
+      <input class="vid-year" data-idx="${i}" value="${escHtml(v.year)}" placeholder="Tahun" style="max-width:70px" />
+      <span class="badge ${v.featured ? 'badge-featured' : 'badge-normal'}">
+        ${v.featured ? '★ Utama' : 'Biasa'}
+      </span>
+      <button class="btn btn-xs ${v.featured ? 'btn-secondary' : 'btn-success'}" onclick="toggleFeatured(${i})">
+        ${v.featured ? 'Lepas' : '★ Jadikan Utama'}
+      </button>
+      <button class="btn btn-xs btn-danger" onclick="removeVideo(${i})">✕</button>
+    </div>
+  `).join('');
+}
+
+function addVideo() {
+  config.videos.push({ youtube_id: '', title: '', year: '2025', featured: false });
+  renderVideos();
+  markModified();
+}
+
+function removeVideo(idx) {
+  config.videos.splice(idx, 1);
+  renderVideos();
+  markModified();
+}
+
+function toggleFeatured(idx) {
+  config.videos.forEach((v, i) => { v.featured = (i === idx ? !v.featured : false); });
+  renderVideos();
+  markModified();
+}
+
+// ==================== GALLERY ====================
+function renderGallery() {
+  const gallery = config.gallery || {};
+  const container = document.getElementById('gallerySections');
+  let html = '';
+  for (const [album, photos] of Object.entries(gallery)) {
+    html += `
+      <div class="gallery-section">
+        <h3>📁 ${album.toUpperCase()}</h3>
+        <div class="photo-grid">
+          ${photos.map((p, i) => `
+            <div class="photo-card">
+              <img src="${escHtml(p.src)}" alt="${escHtml(p.caption)}" onerror="this.src='https://picsum.photos/seed/g${i}/300/200'" />
+              <div class="photo-info">
+                <input class="gal-src" data-album="${album}" data-idx="${i}" value="${escHtml(p.src)}" placeholder="URL gambar" />
+                <input class="gal-caption" data-album="${album}" data-idx="${i}" value="${escHtml(p.caption)}" placeholder="Caption" />
+                <input class="gal-tag" data-album="${album}" data-idx="${i}" value="${escHtml(p.tag)}" placeholder="Tag" style="max-width:80px" />
+                <div class="photo-actions">
+                  <button class="btn btn-xs btn-danger" onclick="removePhoto('${album}',${i})">✕ Hapus</button>
+                </div>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+        <button class="btn btn-xs btn-secondary" style="margin-top:8px" onclick="addPhoto('${album}')">+ Tambah Foto</button>
+      </div>
+    `;
+  }
+  container.innerHTML = html;
+}
+
+function addPhoto(album) {
+  config.gallery[album].push({ src: '', caption: '', tag: '' });
+  renderGallery();
+  markModified();
+}
+
+function removePhoto(album, idx) {
+  config.gallery[album].splice(idx, 1);
+  renderGallery();
+  markModified();
+}
+
+// ==================== COLLECT DATA ====================
+function collectData() {
+  config.hero = {
+    title: getVal('heroTitle'),
+    subtitle: getVal('heroSubtitle'),
+    image: getVal('heroImage')
+  };
+
+  config.about = {
+    title: getVal('aboutTitle'),
+    description: getVal('aboutDesc'),
+    heading: getVal('aboutHeading'),
+    body: getVal('aboutBody'),
+    visi: getVal('aboutVisi'),
+    misi: getVal('aboutMisi'),
+    image: getVal('aboutImage'),
+    year_established: parseInt(getVal('aboutYear')) || 1998,
+    values: config.about?.values || ['Ikhlas dalam setiap amal', 'Amanah dan transparan', "Rahmatan lil 'alamin"]
+  };
+
+  config.stats = {
+    years: parseInt(getVal('statsYears')) || 10,
+    santri: parseInt(getVal('statsSantri')) || 100,
+    relawan: parseInt(getVal('statsRelawan')) || 25,
+    programs: parseInt(getVal('statsPrograms')) || 5
+  };
+
+  // Programs
+  config.programs.title = getVal('progTitle');
+  config.programs.subtitle = getVal('progSubtitle');
+  document.querySelectorAll('.prog-item-title').forEach(el => {
+    const i = parseInt(el.dataset.idx);
+    config.programs.items[i].title = el.value;
+  });
+  document.querySelectorAll('.prog-item-desc').forEach(el => {
+    const i = parseInt(el.dataset.idx);
+    config.programs.items[i].description = el.value;
+  });
+  document.querySelectorAll('.prog-item-tags').forEach(el => {
+    const i = parseInt(el.dataset.idx);
+    config.programs.items[i].tags = el.value;
+  });
+
+  // Videos
+  document.querySelectorAll('.vid-id').forEach(el => {
+    config.videos[parseInt(el.dataset.idx)].youtube_id = el.value;
+  });
+  document.querySelectorAll('.vid-title').forEach(el => {
+    config.videos[parseInt(el.dataset.idx)].title = el.value;
+  });
+  document.querySelectorAll('.vid-year').forEach(el => {
+    config.videos[parseInt(el.dataset.idx)].year = el.value;
+  });
+
+  // Gallery
+  document.querySelectorAll('.gal-src').forEach(el => {
+    config.gallery[el.dataset.album][parseInt(el.dataset.idx)].src = el.value;
+  });
+  document.querySelectorAll('.gal-caption').forEach(el => {
+    config.gallery[el.dataset.album][parseInt(el.dataset.idx)].caption = el.value;
+  });
+  document.querySelectorAll('.gal-tag').forEach(el => {
+    config.gallery[el.dataset.album][parseInt(el.dataset.idx)].tag = el.value;
+  });
+
+  // Contact
+  config.contact = {
+    address: getVal('contactAddress'),
+    email: getVal('contactEmail'),
+    phone: getVal('contactPhone'),
+    whatsapp: getVal('contactWa'),
+    whatsapp_message: getVal('contactWaMsg')
+  };
+
+  // Donasi
+  config.donasi = {
+    title: getVal('donasiTitle'),
+    description: getVal('donasiDesc')
+  };
+
+  // Social
+  config.social = {
+    instagram: getVal('socialIg'),
+    youtube: getVal('socialYt'),
+    facebook: getVal('socialFb')
+  };
+
+  // Footer
+  config.footer = {
+    quote: getVal('footerQuote'),
+    quote_source: getVal('footerQuoteSrc')
+  };
+
+  // Password
+  const newPw = getVal('adminPassword');
+  if (newPw) config.admin_password = newPw;
+}
+
+// ==================== SAVE ====================
+function saveAll() {
+  collectData();
+  const jsonStr = JSON.stringify(config, null, 2);
+
+  // Download file
+  const blob = new Blob([jsonStr], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'config.json';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+
+  originalConfig = jsonStr;
+  updateStatus('ok');
+  showToast('✅ config.json berhasil di-download!', 'success');
+  showToast('📌 Commit file ini ke repo GitHub untuk deploy.', 'success');
+}
+
+// ==================== HELPERS ====================
+function escHtml(str) {
+  if (!str) return '';
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function markModified() {
+  updateStatus('modified');
+}
+
+function updateStatus(state) {
+  const badge = document.getElementById('statusBadge');
+  if (state === 'ok') {
+    badge.className = 'status-badge status-ok';
+    badge.innerHTML = '✅ Tersimpan';
+  } else {
+    badge.className = 'status-badge status-modified';
+    badge.innerHTML = '⚠ Ada perubahan';
+  }
+}
+
+function showToast(msg, type) {
+  const toast = document.getElementById('toast');
+  toast.textContent = msg;
+  toast.className = 'toast ' + type + ' show';
+  setTimeout(() => { toast.classList.remove('show'); }, 3000);
+}
+
+function logout() {
+  sessionStorage.removeItem('yayasan_admin_auth');
+  window.location.href = 'index.html';
+}
+
+// Auto-mark modified on any input change
+document.addEventListener('input', (e) => {
+  if (e.target.closest('.card')) markModified();
+});
+
+// Load on page ready
+loadConfig();
+</script>
+</body>
+</html>

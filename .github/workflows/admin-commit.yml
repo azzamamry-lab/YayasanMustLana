@@ -1,0 +1,38 @@
+name: Auto-commit config dari Admin
+on:
+  workflow_dispatch:
+    inputs:
+      config_json:
+        description: 'config.json content'
+        required: true
+        type: string
+      commit_message:
+        description: 'Commit message'
+        required: false
+        type: string
+        default: 'Update config.json via admin panel'
+permissions:
+  contents: write
+jobs:
+  commit-config:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Write config.json
+        run: |
+          echo '${{ inputs.config_json }}' > yayasan-islam/config.json
+          echo "Config written:"
+          head -5 yayasan-islam/config.json
+
+      - name: Commit and push
+        run: |
+          git config user.name "Admin Panel"
+          git config user.email "admin@mustaqbal.or.id"
+          git add yayasan-islam/config.json
+          git diff --cached --quiet || (
+            git commit -m "${{ inputs.commit_message }}" &&
+            git push
+          )
+          echo "Done."
