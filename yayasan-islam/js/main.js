@@ -1,12 +1,12 @@
 /* ==========================================================================
-   Yayasan Islam Al-Hidayah — interaksi halaman
+   Yayasan Islam Mustaqbal Lana — interaksi halaman
    ========================================================================== */
 
 /* ======================================================================
    1. KONFIGURASI KONTEN
    Ganti URL foto berikut dengan foto dokumentasi yayasan Anda.
    ====================================================================== */
-const WHATSAPP_NUMBER = "6281234567890"; // format internasional tanpa "+"
+const WHATSAPP_NUMBER = "6282147975947"; // format internasional tanpa "+"
 const WHATSAPP_MESSAGE = "Assalamu'alaikum, saya ingin bertanya/donasi ke Yayasan Al-Hidayah.";
 
 const ALBUMS = {
