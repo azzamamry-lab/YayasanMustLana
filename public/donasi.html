@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Donasi — Yayasan Islam Mustaqbal Lana</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Amiri:wght@400;700&display=swap" rel="stylesheet" />
+
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%230f766e'/%3E%3Cpath d='M50 22c-13 0-23 9-23 21 0 7 4 13 9 16v10c0 2 2 4 4 4h20c2 0 4-2 4-4V59c5-3 9-9 9-16 0-12-10-21-23-21z' fill='%23faf9f6'/%3E%3Ccircle cx='50' cy='39' r='5' fill='%23eab308'/%3E%3C/svg%3E" />
+
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- ======================= NAVBAR ======================= -->
+  <header class="navbar" id="navbar">
+    <nav class="container nav-inner" aria-label="Navigasi utama">
+      <a href="index.html" class="brand">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 3c-4.6 0-8 3.2-8 7.2 0 2.4 1.3 4.5 3.2 5.6v3.4c0 .7.6 1.3 1.3 1.3h7c.7 0 1.3-.6 1.3-1.3v-3.4c1.9-1.1 3.2-3.2 3.2-5.6C20 6.2 16.6 3 12 3z" />
+            <path d="M12 7.5c-1.8 0-3.2 1.3-3.2 2.9 0 1 .6 1.9 1.4 2.4" />
+          </svg>
+        </span>
+        <span class="brand-text">
+          <strong>Mustaqbal Lana</strong>
+          <small>Yayasan Islam</small>
+        </span>
+      </a>
+
+      <ul class="nav-links" id="navLinks">
+        <li><a href="index.html" class="nav-link">Beranda</a></li>
+        <li><a href="tentang.html" class="nav-link">Tentang</a></li>
+        <li><a href="program.html" class="nav-link">Program</a></li>
+        <li><a href="kontak.html" class="nav-link">Kontak</a></li>
+        <li class="nav-cta"><a href="donasi.html" class="btn btn-primary btn-sm">Donasi</a></li>
+      </ul>
+
+      <button class="nav-toggle" id="navToggle" aria-label="Buka menu" aria-expanded="false" aria-controls="navLinks">
+        <span></span><span></span><span></span>
+      </button>
+    </nav>
+  </header>
+
+  <!-- ======================= PAGE HERO ======================= -->
+  <section class="page-hero">
+    <div class="hero-pattern" aria-hidden="true"></div>
+    <div class="container page-hero-inner">
+      <span class="eyebrow reveal"><span class="eyebrow-dot"></span> Berderma Bersama Kami</span>
+      <h1 class="page-hero-title reveal">Donasi</h1>
+      <p class="page-hero-desc reveal">Salurkan kebaikan Anda secara transparan dan amanah untuk program pendidikan, sosial, dan dakwah.</p>
+    </div>
+  </section>
+
+  <!-- ======================= PROFIL YAYASAN ======================= -->
+  <section class="section" id="profil">
+    <div class="container">
+      <div class="donasi__profile reveal">
+        <div class="cta-pattern" aria-hidden="true"></div>
+        <div class="donasi__profile-inner">
+          <div class="donasi__profile-top">
+            <div class="donasi__profile-logo">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M12 3c-4.6 0-8 3.2-8 7.2 0 2.4 1.3 4.5 3.2 5.6v3.4c0 .7.6 1.3 1.3 1.3h7c.7 0 1.3-.6 1.3-1.3v-3.4c1.9-1.1 3.2-3.2 3.2-5.6C20 6.2 16.6 3 12 3z" />
+                <path d="M12 7.5c-1.8 0-3.2 1.3-3.2 2.9 0 1 .6 1.9 1.4 2.4" />
+              </svg>
+            </div>
+            <div class="donasi__profile-info">
+              <span class="donasi__profile-tag">✓ Yayasan Terdaftar &amp; Diaudit</span>
+              <h2 class="donasi__profile-name">Yayasan Mustaqbal Lana</h2>
+              <p class="donasi__profile-desc">
+                Lembaga nirlaba di bidang pendidikan Islam yang mengelola beasiswa
+                santri dhuafa, pembangunan fasilitas, dan pemberdayaan masyarakat.
+                Setiap rupiah donasi disalurkan dengan amanah, transparan, dan
+                dilaporkan secara berkala kepada para donatur.
+              </p>
+              <ul class="donasi__profile-meta">
+                <li>📍 Jl. Pendidikan No. 45, Solo, Jawa Tengah</li>
+                <li>📧 donasi@yayasan-mustaqbal-lana.or.id</li>
+                <li>📞 +62 821 4797 5947</li>
+                <li>🕐 Senin – Sabtu, 08.00 – 16.00 WIB</li>
+              </ul>
+              <div class="donasi__profile-legal">
+                <span>Akte Notaris</span>
+                <span>SK Kemenkumham</span>
+                <span>NPWP Yayasan</span>
+                <span>Laporan Tahunan</span>
+              </div>
+            </div>
+          </div>
+          <div class="donasi__profile-stats">
+            <div><span>2.400+</span>Donatur Aktif</div>
+            <div><span>Rp 1,2 M</span>Dana Tersalurkan</div>
+            <div><span>120+</span>Program Tersalurkan</div>
+            <div><span>98%</span>Dana ke Program</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================= FORM DONASI ======================= -->
+  <section class="section section-tint" id="donasi">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow"><span class="eyebrow-dot"></span> Formulir Donasi</span>
+        <h2 class="section-title">Salurkan Kebaikan Anda</h2>
+        <p class="section-desc">
+          Pilih program, tentukan nominal, dan selesaikan pembayaran melalui
+          metode yang paling nyaman untuk Anda.
+        </p>
+      </div>
+
+      <div class="donasi__grid">
+        <form class="donasi__card donasi__form" id="donasiForm" novalidate>
+          <h3 class="donasi__card-title">1️⃣ Pilih Program</h3>
+          <div class="donasi__chips" id="programChips">
+            <label class="donasi__chip">
+              <input type="radio" name="program" value="Beasiswa Santri Dhuafa" checked />
+              <span>🎓 Beasiswa Santri Dhuafa</span>
+            </label>
+            <label class="donasi__chip">
+              <input type="radio" name="program" value="Pembangunan Gedung Baru" />
+              <span>🏗️ Pembangunan Gedung Baru</span>
+            </label>
+            <label class="donasi__chip">
+              <input type="radio" name="program" value="Wakaf Al-Qur'an" />
+              <span>📖 Wakaf Al-Qur'an</span>
+            </label>
+            <label class="donasi__chip">
+              <input type="radio" name="program" value="Program Umum &amp; Sosial" />
+              <span>🤝 Program Umum &amp; Sosial</span>
+            </label>
+          </div>
+
+          <h3 class="donasi__card-title">2️⃣ Nominal Donasi</h3>
+          <div class="donasi__chips" id="amountChips">
+            <label class="donasi__chip donasi__chip--amount">
+              <input type="radio" name="amountPreset" value="50000" checked />
+              <span>Rp 50.000</span>
+            </label>
+            <label class="donasi__chip donasi__chip--amount">
+              <input type="radio" name="amountPreset" value="100000" />
+              <span>Rp 100.000</span>
+            </label>
+            <label class="donasi__chip donasi__chip--amount">
+              <input type="radio" name="amountPreset" value="250000" />
+              <span>Rp 250.000</span>
+            </label>
+            <label class="donasi__chip donasi__chip--amount">
+              <input type="radio" name="amountPreset" value="500000" />
+              <span>Rp 500.000</span>
+            </label>
+            <label class="donasi__chip donasi__chip--amount">
+              <input type="radio" name="amountPreset" value="1000000" />
+              <span>Rp 1.000.000</span>
+            </label>
+            <label class="donasi__chip donasi__chip--amount">
+              <input type="radio" name="amountPreset" value="custom" />
+              <span>✏️ Lainnya</span>
+            </label>
+          </div>
+          <input type="number" id="customAmount" class="donasi__input" placeholder="Masukkan nominal lain (min. Rp 10.000)" min="10000" step="10000" disabled />
+
+          <h3 class="donasi__card-title">3️⃣ Data Donatur</h3>
+          <div class="donasi__row">
+            <input type="text" name="name" class="donasi__input" placeholder="Nama Lengkap *" required />
+            <input type="email" name="email" class="donasi__input" placeholder="Email *" required />
+          </div>
+          <input type="tel" name="phone" class="donasi__input" placeholder="No. WhatsApp (opsional)" />
+          <textarea name="message" class="donasi__input" rows="3" placeholder="Doa / pesan untuk yayasan (opsional)"></textarea>
+
+          <h3 class="donasi__card-title">4️⃣ Metode Pembayaran</h3>
+          <div class="donasi__methods" id="methodOptions">
+            <label class="donasi__method">
+              <input type="radio" name="method" value="Transfer Bank" checked />
+              <span class="donasi__method-body">
+                <span class="donasi__method-icon">🏦</span>
+                <strong>Transfer Bank</strong>
+                <small>BCA · Mandiri · BRI</small>
+              </span>
+            </label>
+            <label class="donasi__method">
+              <input type="radio" name="method" value="E-Wallet" />
+              <span class="donasi__method-body">
+                <span class="donasi__method-icon">💳</span>
+                <strong>E-Wallet</strong>
+                <small>DANA · OVO · GoPay</small>
+              </span>
+            </label>
+            <label class="donasi__method">
+              <input type="radio" name="method" value="QRIS" />
+              <span class="donasi__method-body">
+                <span class="donasi__method-icon">📱</span>
+                <strong>QRIS</strong>
+                <small>Scan semua aplikasi</small>
+              </span>
+            </label>
+          </div>
+
+          <!-- Detail metode pembayaran -->
+          <div class="donasi__method-detail" id="detailBank">
+            <div class="donasi__bank">
+              <div class="donasi__bank-row">
+                <span>BCA</span>
+                <strong>8830 1234 5678</strong>
+                <button type="button" class="donasi__copy" data-copy="883012345678">Salin</button>
+              </div>
+              <div class="donasi__bank-row">
+                <span>Mandiri</span>
+                <strong>1370 0099 8877</strong>
+                <button type="button" class="donasi__copy" data-copy="137000998877">Salin</button>
+              </div>
+              <div class="donasi__bank-row">
+                <span>BRI</span>
+                <strong>0023 0100 5566 789</strong>
+                <button type="button" class="donasi__copy" data-copy="002301005566789">Salin</button>
+              </div>
+              <p class="donasi__method-note">
+                a.n. <strong>Yayasan Mustaqbal Lana</strong>. Setelah transfer,
+                bukti donasi otomatis dikirim ke email Anda.
+              </p>
+            </div>
+          </div>
+          <div class="donasi__method-detail" id="detailWallet" hidden>
+            <div class="donasi__bank">
+              <div class="donasi__bank-row">
+                <span>DANA</span>
+                <strong>0821 4797 5947</strong>
+                <button type="button" class="donasi__copy" data-copy="082147975947">Salin</button>
+              </div>
+              <div class="donasi__bank-row">
+                <span>OVO</span>
+                <strong>0821 4797 5947</strong>
+                <button type="button" class="donasi__copy" data-copy="082147975947">Salin</button>
+              </div>
+              <div class="donasi__bank-row">
+                <span>GoPay</span>
+                <strong>0821 4797 5947</strong>
+                <button type="button" class="donasi__copy" data-copy="082147975947">Salin</button>
+              </div>
+              <p class="donasi__method-note">
+                a.n. <strong>Yayasan Mustaqbal Lana</strong>.
+              </p>
+            </div>
+          </div>
+          <div class="donasi__method-detail" id="detailQris" hidden>
+            <div class="donasi__qris">
+              <div class="donasi__qris-placeholder">
+                <span class="donasi__qris-label">QRIS</span>
+              </div>
+              <p class="donasi__method-note">
+                Scan kode QRIS di atas dengan GoPay, OVO, DANA, LinkAja,
+                atau m-Banking mana pun.
+              </p>
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-primary donasi__submit">🤲 Donasi Sekarang</button>
+          <div id="donasiFeedback" class="donasi__feedback" role="status"></div>
+        </form>
+
+        <aside class="donasi__aside">
+          <div class="donasi__card donasi__summary">
+            <h3 class="donasi__card-title">Ringkasan Donasi</h3>
+            <div class="donasi__summary-row">
+              <span>Program</span>
+              <strong id="sumProgram">Beasiswa Santri Dhuafa</strong>
+            </div>
+            <div class="donasi__summary-row">
+              <span>Nominal</span>
+              <strong id="sumAmount">Rp 50.000</strong>
+            </div>
+            <div class="donasi__summary-row">
+              <span>Metode</span>
+              <strong id="sumMethod">Transfer Bank</strong>
+            </div>
+            <div class="donasi__summary-total">
+              <span>Total Donasi</span>
+              <strong id="sumTotal">Rp 50.000</strong>
+            </div>
+          </div>
+
+          <div class="donasi__card donasi__trust">
+            <h3 class="donasi__card-title">Transparan &amp; Amanah</h3>
+            <ul>
+              <li>🔍 Laporan keuangan diaudit setiap tahun</li>
+              <li>📄 Bukti donasi dikirim via email</li>
+              <li>🔄 Dana tersalurkan maksimal 14 hari kerja</li>
+              <li>💬 Perkembangan program via WhatsApp rutin</li>
+            </ul>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================= MODAL SUKSES ======================= -->
+  <div class="modal" id="donasiModal" aria-hidden="true">
+    <div class="modal__overlay" data-modal-close></div>
+    <div class="modal__card" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <button class="modal__close" type="button" data-modal-close aria-label="Tutup">×</button>
+      <div class="modal__check">✓</div>
+      <h3 class="modal__title" id="modalTitle">Jazakumullah Khairan!</h3>
+      <p class="modal__desc">
+        Donasi Anda telah kami terima. Mohon selesaikan pembayaran sesuai
+        metode yang Anda pilih agar dana segera tersalurkan.
+      </p>
+      <div class="modal__detail">
+        <div><span>No. Donasi</span><strong id="modalId">—</strong></div>
+        <div><span>Program</span><strong id="modalProgram">—</strong></div>
+        <div><span>Nominal</span><strong id="modalAmount">—</strong></div>
+        <div><span>Metode</span><strong id="modalMethod">—</strong></div>
+      </div>
+      <button type="button" class="btn btn-primary" data-modal-close>Selesai</button>
+    </div>
+  </div>
+
+  <!-- ======================= FOOTER ======================= -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="index.html" class="brand brand-footer">
+            <span class="brand-mark" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c-4.6 0-8 3.2-8 7.2 0 2.4 1.3 4.5 3.2 5.6v3.4c0 .7.6 1.3 1.3 1.3h7c.7 0 1.3-.6 1.3-1.3v-3.4c1.9-1.1 3.2-3.2 3.2-5.6C20 6.2 16.6 3 12 3z"/><path d="M12 7.5c-1.8 0-3.2 1.3-3.2 2.9 0 1 .6 1.9 1.4 2.4"/></svg>
+            </span>
+            <span class="brand-text"><strong>Mustaqbal Lana</strong><small>Yayasan Islam</small></span>
+          </a>
+          <p>Lembaga nirlaba yang berkhidmat di bidang pendidikan, sosial-kemanusiaan, dan dakwah sejak 2015.</p>
+          <div class="socials">
+            <a href="#" aria-label="Instagram" title="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1" fill="currentColor" stroke="none"/></svg></a>
+            <a href="#" aria-label="YouTube" title="YouTube"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 17a24 24 0 0 1 0-10 2 2 0 0 1 1.4-1.4 49.6 49.6 0 0 1 16.2 0A2 2 0 0 1 21.5 7a24 24 0 0 1 0 10 2 2 0 0 1-1.4 1.4 49.6 49.6 0 0 1-16.2 0A2 2 0 0 1 2.5 17z"/><path d="M10 9.5l5 2.5-5 2.5z" fill="currentColor" stroke="none"/></svg></a>
+            <a href="#" aria-label="Facebook" title="Facebook"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>
+            <a href="#" aria-label="WhatsApp" title="WhatsApp"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.5 8.5 0 0 1-12.4 7.6L3 21l1.9-5.6A8.5 8.5 0 1 1 21 11.5z"/><path d="M9 8.5c.4 2.5 3.5 5.6 6 6l1-1.2c.3-.3.7-.4 1-.2l2 1c.4.2.5.7.3 1-.7 1.4-2.2 2.4-4.4 1.6C11 15.3 8.7 13 8.2 10c-.8-2.2.2-3.7 1.6-4.4.3-.2.8-.1 1 .3l1 2c.2.3.1.7-.2 1z"/></svg></a>
+          </div>
+        </div>
+
+        <div class="footer-col">
+          <h4>Jelajahi</h4>
+          <ul>
+            <li><a href="index.html">Beranda</a></li>
+            <li><a href="tentang.html">Tentang Kami</a></li>
+            <li><a href="program.html">Program</a></li>
+            <li><a href="kontak.html">Kontak</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Program</h4>
+          <ul>
+            <li><a href="program.html">Pendidikan</a></li>
+            <li><a href="program.html">Sosial Kemanusiaan</a></li>
+            <li><a href="program.html">Dakwah &amp; Kajian</a></li>
+            <li><a href="donasi.html">Donasi &amp; Wakaf</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Kontak</h4>
+          <ul class="contact-list">
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              Jl. Pendidikan No. 45, Solo, Jawa Tengah
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 6 10-6"/></svg>
+              <a href="mailto:info@yayasan-mustaqbal-lana.or.id">info@yayasan-mustaqbal-lana.or.id</a>
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3-8.7A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 2 .7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.2a2 2 0 0 1 2.1-.5c.9.3 1.9.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg>
+              <a href="tel:+6282147975947">+62 821-4797-5947</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>© <span class="year">2026</span> Yayasan Islam Mustaqbal Lana. Seluruh hak cipta dilindungi.</p>
+        <p class="footer-quran">“Sebaik-baik manusia adalah yang paling bermanfaat bagi manusia lain.” <span class="footer-quran-src">(HR. Ahmad)</span></p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ======================= FLOATING ======================= -->
+  <a href="#" class="whatsapp-float" id="waFloat" aria-label="Chat via WhatsApp" title="Chat via WhatsApp">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.5 8.5 0 0 1-12.4 7.6L3 21l1.9-5.6A8.5 8.5 0 1 1 21 11.5z"/><path d="M9 8.5c.4 2.5 3.5 5.6 6 6l1-1.2c.3-.3.7-.4 1-.2l2 1c.4.2.5.7.3 1-.7 1.4-2.2 2.4-4.4 1.6C11 15.3 8.7 13 8.2 10c-.8-2.2.2-3.7 1.6-4.4.3-.2.8-.1 1 .3l1 2c.2.3.1.7-.2 1z"/></svg>
+  </a>
+  <button class="back-top" id="backTop" aria-label="Kembali ke atas">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+  </button>
+
+  <script src="script.js"></script>
+</body>
+</html>
