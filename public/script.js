@@ -244,15 +244,27 @@ var WA_PHONE = '6282147975947';
       feedback.textContent = '❌ Mohon lengkapi nama, email, dan pesan Anda.';
       return;
     }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      feedback.style.color = '#b91c1c';
+      feedback.textContent = '❌ Format email tidak valid.';
+      return;
+    }
 
     var text =
       'Assalamualaikum, saya ' + name + ' (' + email + ').\n\n' +
       message;
     var url = 'https://wa.me/' + WA_PHONE + '?text=' + encodeURIComponent(text);
-    window.open(url, '_blank', 'noopener');
+    var win = window.open(url, '_blank', 'noopener');
 
-    feedback.style.color = '#0f766e';
-    feedback.textContent = '✅ WhatsApp terbuka. Silakan kirim pesan Anda di sana.';
+    if (!win) {
+      feedback.style.color = '#0f766e';
+      feedback.innerHTML =
+        '✅ WhatsApp tidak terbuka otomatis (popup diblokir). ' +
+        '<a href="' + url + '" target="_blank" rel="noopener" style="color:#0f766e;font-weight:700;text-decoration:underline;">Klik di sini untuk membuka WhatsApp</a>';
+    } else {
+      feedback.style.color = '#0f766e';
+      feedback.textContent = '✅ WhatsApp terbuka. Silakan kirim pesan Anda di sana.';
+    }
     form.reset();
   });
 })();
@@ -403,7 +415,7 @@ var WA_PHONE = '6282147975947';
       '\nMohon info langkah pembayaran selanjutnya. Jazakumullah khairan.';
 
     var url = 'https://wa.me/' + WA_PHONE + '?text=' + encodeURIComponent(text);
-    window.open(url, '_blank', 'noopener');
+    var win = window.open(url, '_blank', 'noopener');
 
     document.getElementById('modalId').textContent =
       'DON-' + Date.now().toString(36).toUpperCase().slice(-6);
@@ -413,7 +425,14 @@ var WA_PHONE = '6282147975947';
 
     openModal();
 
-    feedback.textContent = '';
+    if (!win) {
+      feedback.style.color = '#b91c1c';
+      feedback.innerHTML =
+        '⚠️ WhatsApp tidak terbuka otomatis (popup diblokir). ' +
+        '<a href="' + url + '" target="_blank" rel="noopener" style="color:#b91c1c;font-weight:700;text-decoration:underline;">Klik di sini untuk mengirim donasi via WhatsApp</a>';
+    } else {
+      feedback.textContent = '';
+    }
     form.reset();
     customInput.value = '';
     customInput.disabled = true;
