@@ -113,10 +113,12 @@
 })();
 
 /* ========================================================
-   LINK WHATSAPP (floating + CTA)
+   LINK WHATSAPP (floating + CTA + form)
    ======================================================== */
+var WA_PHONE = '6282147975947';
+
 (function () {
-  var phone = '6282147975947';
+  var phone = WA_PHONE;
   var msg = 'Assalamualaikum, saya ingin bertanya / berdonasi ke Yayasan Mustaqbal Lana.';
   var url = 'https://wa.me/' + phone + '?text=' + encodeURIComponent(msg);
 
@@ -230,33 +232,28 @@
   var feedback = document.getElementById('formFeedback');
   if (!feedback) return;
 
-  form.addEventListener('submit', async function (e) {
+  form.addEventListener('submit', function (e) {
     e.preventDefault();
-    var data = {
-      name: form.name.value,
-      email: form.email.value,
-      message: form.message.value,
-    };
 
-    try {
-      var res = await fetch('/api/contact', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
-      });
-      var result = await res.json();
-      if (result.success) {
-        feedback.style.color = '#0f766e';
-        feedback.textContent = '✅ Pesan berhasil dikirim. Terima kasih!';
-        form.reset();
-      } else {
-        feedback.style.color = '#b91c1c';
-        feedback.textContent = '❌ Gagal mengirim. Coba lagi nanti.';
-      }
-    } catch (err) {
+    var name = form.name.value.trim();
+    var email = form.email.value.trim();
+    var message = form.message.value.trim();
+
+    if (!name || !email || !message) {
       feedback.style.color = '#b91c1c';
-      feedback.textContent = '❌ Terjadi kesalahan. Periksa koneksi Anda.';
+      feedback.textContent = '❌ Mohon lengkapi nama, email, dan pesan Anda.';
+      return;
     }
+
+    var text =
+      'Assalamualaikum, saya ' + name + ' (' + email + ').\n\n' +
+      message;
+    var url = 'https://wa.me/' + WA_PHONE + '?text=' + encodeURIComponent(text);
+    window.open(url, '_blank', 'noopener');
+
+    feedback.style.color = '#0f766e';
+    feedback.textContent = '✅ WhatsApp terbuka. Silakan kirim pesan Anda di sana.';
+    form.reset();
   });
 })();
 
@@ -367,8 +364,8 @@
     });
   }
 
-  // Kirim donasi
-  form.addEventListener('submit', async function (e) {
+  // Kirim donasi via WhatsApp
+  form.addEventListener('submit', function (e) {
     e.preventDefault();
 
     var amount = currentAmount();
@@ -391,49 +388,37 @@
       return;
     }
 
-    var data = {
-      name: name,
-      email: email,
-      phone: form.phone.value,
-      program: currentProgram(),
-      amount: amount,
-      method: currentMethod(),
-      message: form.message.value
-    };
+    var program = currentProgram();
+    var method = currentMethod();
 
-    feedback.style.color = '';
-    feedback.textContent = '⏳ Mengirim donasi...';
+    var text =
+      'Assalamualaikum, saya ingin berdonasi ke Yayasan Mustaqbal Lana.\n\n' +
+      '👤 Nama: ' + name + '\n' +
+      '📧 Email: ' + email + '\n' +
+      '📱 No. WA: ' + (form.phone.value || '-') + '\n' +
+      '🎯 Program: ' + program + '\n' +
+      '💰 Nominal: ' + formatRupiah(amount) + '\n' +
+      '💳 Metode: ' + method + '\n' +
+      (form.message.value ? '📝 Pesan: ' + form.message.value + '\n' : '') +
+      '\nMohon info langkah pembayaran selanjutnya. Jazakumullah khairan.';
 
-    try {
-      var res = await fetch('/api/donasi', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data)
-      });
-      var result = await res.json();
+    var url = 'https://wa.me/' + WA_PHONE + '?text=' + encodeURIComponent(text);
+    window.open(url, '_blank', 'noopener');
 
-      if (result.success) {
-        document.getElementById('modalId').textContent = result.id;
-        document.getElementById('modalProgram').textContent = data.program;
-        document.getElementById('modalAmount').textContent = formatRupiah(amount);
-        document.getElementById('modalMethod').textContent = data.method;
+    document.getElementById('modalId').textContent =
+      'DON-' + Date.now().toString(36).toUpperCase().slice(-6);
+    document.getElementById('modalProgram').textContent = program;
+    document.getElementById('modalAmount').textContent = formatRupiah(amount);
+    document.getElementById('modalMethod').textContent = method;
 
-        openModal();
+    openModal();
 
-        feedback.textContent = '';
-        form.reset();
-        customInput.value = '';
-        customInput.disabled = true;
-        showMethodDetail();
-        updateSummary();
-      } else {
-        feedback.style.color = '#b91c1c';
-        feedback.textContent = '❌ ' + (result.message || 'Gagal mengirim. Coba lagi nanti.');
-      }
-    } catch (err) {
-      feedback.style.color = '#b91c1c';
-      feedback.textContent = '❌ Terjadi kesalahan. Periksa koneksi Anda.';
-    }
+    feedback.textContent = '';
+    form.reset();
+    customInput.value = '';
+    customInput.disabled = true;
+    showMethodDetail();
+    updateSummary();
   });
 
   // Buka & tutup modal
