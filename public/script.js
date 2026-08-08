@@ -120,7 +120,7 @@ var WA_PHONE = '+6281292624953';
 (function () {
   var phone = WA_PHONE;
   var msg = 'Assalamualaikum, saya ingin bertanya / berdonasi ke Yayasan Bin Sef Al Khoiriyah.';
-  var url = 'https://wa.me/6281292624953' + +62 812-9262-4953 + '?text=' + encodeURIComponent(msg);
+  var url = 'https://wa.me/6281292624953' +62 812-9262-4953 '?text=' + encodeURIComponent(msg);
 
   var wa = document.getElementById('waFloat');
   if (wa) wa.href = url;
