@@ -58,7 +58,7 @@ function applyConfig() {
 
   // WhatsApp
   if (CONFIG.contact) {
-    const waNum = CONFIG.contact.whatsapp || '6282147975947';
+    const waNum = CONFIG.contact.whatsapp || '6281292624953';
     const waMsg = CONFIG.contact.whatsapp_message || "Assalamu'alaikum, saya ingin bertanya/donasi ke Yayasan Mustaqbal Lana.";
     const waLink = `https://wa.me/${waNum}?text=${encodeURIComponent(waMsg)}`;
     const waFloat = document.querySelector('#waFloat');
@@ -71,7 +71,7 @@ function applyConfig() {
 /* ======================================================================
    1. KONFIGURASI KONTEN (fallback)
    ====================================================================== */
-const WHATSAPP_NUMBER = "6282147975947";
+const WHATSAPP_NUMBER = "6281292624953";
 const WHATSAPP_MESSAGE = "Assalamu'alaikum, saya ingin bertanya/donasi ke Yayasan Mustaqbal Lana.";
 
 const ALBUMS_FALLBACK = {
