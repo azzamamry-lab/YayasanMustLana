@@ -115,12 +115,12 @@
 /* ========================================================
    LINK WHATSAPP (floating + CTA + form)
    ======================================================== */
-var WA_PHONE = '6282147975947';
+var WA_PHONE = '+6281292624953';
 
 (function () {
   var phone = WA_PHONE;
-  var msg = 'Assalamualaikum, saya ingin bertanya / berdonasi ke Yayasan Mustaqbal Lana.';
-  var url = 'https://wa.me/' + phone + '?text=' + encodeURIComponent(msg);
+  var msg = 'Assalamualaikum, saya ingin bertanya / berdonasi ke Yayasan Bin Sef Al Khoiriyah.';
+  var url = 'https://wa.me/6281292624953' + +62 812-9262-4953 + '?text=' + encodeURIComponent(msg);
 
   var wa = document.getElementById('waFloat');
   if (wa) wa.href = url;
@@ -404,7 +404,7 @@ var WA_PHONE = '6282147975947';
     var method = currentMethod();
 
     var text =
-      'Assalamualaikum, saya ingin berdonasi ke Yayasan Mustaqbal Lana.\n\n' +
+      'Assalamualaikum, saya ingin berdonasi ke Yayasan Bin Sef Al Khoiriyah.\n\n' +
       '👤 Nama: ' + name + '\n' +
       '📧 Email: ' + email + '\n' +
       '📱 No. WA: ' + (form.phone.value || '-') + '\n' +
