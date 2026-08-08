@@ -8,6 +8,10 @@ npm-debug.log*
 # Environment & secrets
 .env
 .env.local
+.env.production
+
+# Data lokal backend (penyimpanan JSON saat tanpa database)
+data/
 
 # OS files
 .DS_Store

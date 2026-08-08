@@ -1650,3 +1650,47 @@ code { font-size: 0.9em; background: var(--surface-2); padding: 2px 7px; border-
   }
   .reveal { opacity: 1; transform: none; }
 }
+
+
+/* ==========================================================================
+   BERITA & PENGUMUMAN
+   ========================================================================== */
+.berita-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+.berita-card {
+  position: relative;
+  padding: 28px 26px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  transition: transform var(--t-med) var(--ease), box-shadow var(--t-med) var(--ease);
+}
+.berita-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
+.berita-card::before {
+  content: "";
+  position: absolute;
+  left: 26px; top: 0;
+  width: 42px; height: 4px;
+  border-radius: 0 0 4px 4px;
+  background: linear-gradient(90deg, var(--primary), var(--accent));
+}
+.berita-date {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin-bottom: 14px;
+}
+.berita-title { margin: 0 0 10px; font-size: 1.12rem; line-height: 1.4; }
+.berita-body { margin: 0; color: var(--muted); font-size: 0.93rem; line-height: 1.65; white-space: pre-line; }
+@media (max-width: 768px) {
+  .berita-grid { grid-template-columns: 1fr; }
+}

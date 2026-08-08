@@ -1,58 +1,98 @@
-# Yayasan Islam Al-Hidayah — Landing Page (Demo)
+# Yayasan Islam Bin Sef Al Khoiriyah — Website & Backend Admin
 
-Landing page statis untuk profil yayasan islam: pendidikan, kegiatan sosial, dan pembinaan santri.
-Murni **HTML + CSS + JavaScript** — tanpa framework, tanpa server, tanpa database.
+Website profil yayasan (HTML + CSS + JS murni, di-hosting di GitHub Pages) **plus backend admin**
+(Node.js + Express) untuk mengelola **konten website**, **galeri foto**, dan **berita & pengumuman**
+tanpa perlu menyentuh kode.
 
-## Struktur Folder
+---
+
+## 🗂 Struktur
 
 ```
-yayasan-islam/
-├── index.html      → halaman utama (semua section)
-├── css/style.css   → design system minimalis & responsif
-├── js/main.js      → konfigurasi galeri + interaksi
-└── .nojekyll       → agar GitHub Pages tidak memproses Jekyll
+├── public/            → situs publik (di-deploy ke GitHub Pages)
+│   ├── index.html     → halaman depan (hero, tentang, program, video, galeri, berita, kontak)
+│   ├── tentang.html / program.html / kontak.html / donasi.html
+│   ├── styles.css / script.js
+│   ├── content-loader.js  → ambil konten dari API backend & terapkan ke halaman
+│   └── site-config.js     → setel URL API backend (window.SITE_API_URL)
+├── admin/             → panel admin (login + dashboard), dilayani backend
+│   ├── index.html     → halaman login
+│   ├── dashboard.html → kelola konten, galeri, berita
+│   └── admin.css / admin.js / dashboard.js
+├── server.js          → backend Express: API + auth + serve situs & admin
+├── storage.js         → penyimpanan (PostgreSQL produksi / file JSON lokal)
+├── config.json        → data awal (seed) konten situs
+└── .env.example       → contoh konfigurasi environment
 ```
 
-## Cara Deploy ke GitHub Pages (tanpa terminal)
+## ▶️ Menjalankan di komputer (lokal)
 
-1. **Buat akun GitHub** di https://github.com/signup (jika belum punya).
-2. **Buat repository baru**: klik tombol `+` → *New repository*.
-   - Repository name: contoh `yayasan-alhidayah`
-   - Pilih **Public** (gratis untuk publik).
-   - Jangan centang apa pun — klik *Create repository*.
-3. **Upload file**: di halaman repo, klik *uploading an existing file* →
-   buka folder `yayasan-islam` di komputer, lalu **seret isi folder tersebut**
-   (`index.html`, folder `css`, folder `js`, dan `.nojekyll`) ke area upload →
-   klik *Commit changes*.
-4. **Aktifkan Pages**: buka tab **Settings** → menu **Pages** (sidebar kiri) →
-   pada *Source* pilih **Deploy from a branch** → *Branch*: `main` → folder: `/ (root)` →
-   klik **Save**.
-5. **Tunggu 1–2 menit**, lalu buka:
-   `https://<username-anda>.github.io/<nama-repo>/`
+```bash
+npm install
+npm start        # atau: npm run dev (nodemon)
+```
 
-   Contoh: `https://budi123.github.io/yayasan-alhidayah/`
+Lalu buka:
+- Situs publik: http://localhost:3002
+- Panel admin:  http://localhost:3002/admin/
+- Login default (mode pengembangan): **admin / admin123**
 
-> Catatan: jika nama repo persis `<username>.github.io`, situs akan tampil di
-> `https://<username>.github.io/` (tanpa nama repo).
+Tanpa database, data tersimpan di file `data/db.json` (otomatis dibuat & di-ignore git).
 
-## Cara Mengubah Konten (sebelum upload ulang)
+## 🚀 Deploy Backend Online (gratis)
 
-| Yang diganti | Di mana |
-|---|---|
-| Nama & identitas yayasan | Cari & ganti kata `Al-Hidayah` di `index.html` |
-| Video YouTube | Cari komentar `GANTI ID VIDEO` di `index.html` |
-| Foto galeri | Objek `ALBUMS` di `js/main.js` |
-| Nomor WhatsApp | `WHATSAPP_NUMBER` di `js/main.js` |
-| Email / telepon / alamat | Bagian footer di `index.html` |
+Backend perlu hosting yang mendukung Node.js. Langkah rekomendasi:
 
-## Pemasangan Domain Sendiri (nanti)
+1. **Database PostgreSQL gratis** → buat proyek di [Neon](https://neon.tech)
+   (atau Supabase), salin **connection string** (`postgresql://...`).
+2. **Hosting backend** → buat akun di [Render](https://render.com), lalu
+   **New → Web Service**, hubungkan repo GitHub ini.
+   - Build command: `npm install`
+   - Start command: `node server.js`
+3. **Environment variables** di dashboard Render:
+   | Variabel | Nilai |
+   |---|---|
+   | `DATABASE_URL` | connection string Neon (Postgres) |
+   | `ADMIN_USERNAME` | username admin |
+   | `ADMIN_PASSWORD` | password admin yang kuat |
+   | `SESSION_SECRET` | string acak panjang |
+   | `ALLOWED_ORIGIN` | `https://binsefalkhoiriyah.com` |
+   - Render otomatis mengisi `PORT`.
 
-Setelah situs jalan di GitHub Pages:
+4. **Hubungkan situs publik (GitHub Pages) ke API**:
+   Edit `public/site-config.js` di repo:
+   ```js
+   window.SITE_API_URL = 'https://nama-backend-anda.onrender.com';
+   ```
+   Commit → GitHub Pages ter-deploy ulang → situs mengambil konten dari backend.
+   Jika API tidak tersedia, situs tetap tampil dengan konten statis bawaan (aman).
 
-1. **Di GitHub**: Settings → Pages → kolom *Custom domain* → isi domain Anda
-   (contoh `alhidayah.or.id`) → Save (GitHub akan membuat file `CNAME` otomatis).
-2. **Di registrar domain** (idwebhost, Niagahoster, dll.):
-   - **A record** untuk root domain:
-     `185.199.108.153`, `185.199.109.153`, `185.199.110.153`, `185.199.111.153`
-   - **CNAME** untuk `www` → `<username>.github.io`
-3. HTTPS aktif otomatis setelah beberapa saat.
+> 💡 Render versi gratis mematikan layanan setelah ~15 menit tidak aktif;
+> kunjungan pertama akan membutuhkan beberapa detik (cold start).
+
+## 🔐 Keamanan
+
+- Password admin TIDAK disimpan di file publik; gunakan env `ADMIN_PASSWORD`
+  (atau `ADMIN_PASSWORD_HASH` untuk hash bcrypt).
+- Sesi admin memakai cookie httpOnly; dashboard hanya bisa diakses setelah login.
+- Endpoint tulis (`PUT/POST/DELETE`) hanya bisa dipanggil dengan sesi admin valid.
+- Ganti nilai default `admin/admin123` dan `SESSION_SECRET` saat deploy.
+
+## 🧩 API Ringkas
+
+| Method | Path | Akses | Fungsi |
+|---|---|---|---|
+| GET | `/api/site` | publik | Konten + galeri + berita (dipakai situs) |
+| GET | `/api/content` · `/api/gallery` · `/api/berita` | publik | Baca per-bagian |
+| POST | `/api/login` · `/api/logout` | publik | Login / logout admin |
+| GET | `/api/session` | publik | Cek status login |
+| PUT | `/api/content` | admin | Simpan konten |
+| POST/PUT/DELETE | `/api/gallery[/:id]` | admin | Kelola galeri |
+| POST/PUT/DELETE | `/api/berita[/:id]` | admin | Kelola berita |
+
+## 📝 Catatan
+
+- `config.json` dipakai sebagai **data awal (seed)** saat database pertama kali dibuat.
+- Folder `public/` adalah yang ter-deploy ke GitHub Pages (workflow `pages.yml`).
+- File di root lama (`index.html`, `css/`, `js/`) adalah template versi lama yang
+  tidak dipakai situs live; dibiarkan agar tidak mengganggu.

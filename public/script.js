@@ -94,6 +94,12 @@
   }, { threshold: 0.4 });
 
   counters.forEach(function (el) { io.observe(el); });
+
+  // Jalankan ulang animasi angka setelah konten CMS dimuat (nilai data-count baru)
+  window.addEventListener('cms:ready', function () {
+    var els = document.querySelectorAll('[data-count]');
+    for (var i = 0; i < els.length; i++) animate(els[i]);
+  });
 })();
 
 /* ========================================================
@@ -138,57 +144,39 @@ var WA_PHONE = '+6281292624953';
   yearEls.forEach(function (el) { el.textContent = year; });
 })();
 
-/* ========================================================
-   GALERI — tab album + lightbox
-   ======================================================== */
 (function () {
   var grid = document.getElementById('galleryGrid');
   if (!grid) return;
 
-  var items = Array.prototype.slice.call(grid.querySelectorAll('.gallery-item'));
   var tabs = document.querySelectorAll('.tab-btn');
   var lightbox = document.getElementById('lightbox');
-
-  // Tab filter
-  tabs.forEach(function (tab) {
-    tab.addEventListener('click', function () {
-      tabs.forEach(function (t) {
-        t.classList.remove('is-active');
-        t.setAttribute('aria-selected', 'false');
-      });
-      tab.classList.add('is-active');
-      tab.setAttribute('aria-selected', 'true');
-
-      var album = tab.getAttribute('data-album');
-      items.forEach(function (it) {
-        it.style.display = (it.getAttribute('data-album') === album) ? '' : 'none';
-      });
-    });
-  });
-
-  if (!lightbox) return;
-
   var lbImg = document.getElementById('lbImg');
   var lbCaption = document.getElementById('lbCaption');
   var lbClose = document.getElementById('lbClose');
-  var lastFocused = null;
-  var visible = items.slice();
+  var items = [];
+  var visible = [];
   var index = 0;
+  var lastFocused = null;
+  var tabsBound = false;
+  var lightboxBound = false;
+
+  function collectItems() {
+    items = Array.prototype.slice.call(grid.querySelectorAll('.gallery-item'));
+    visible = items.slice();
+  }
 
   function show(i) {
     if (!visible.length) return;
     index = (i + visible.length) % visible.length;
     var it = visible[index];
     var img = it.querySelector('img');
-    lbImg.src = img.getAttribute('data-full') || img.src;
-    lbImg.alt = img.alt || '';
-    lbCaption.textContent = it.querySelector('.gallery-overlay p').textContent;
+    if (lbImg) { lbImg.src = img.getAttribute('data-full') || img.src; lbImg.alt = img.alt || ''; }
+    if (lbCaption) lbCaption.textContent = it.querySelector('.gallery-overlay p').textContent;
   }
 
   function open(it) {
-    visible = items.filter(function (item) {
-      return item.style.display !== 'none';
-    });
+    if (!lightbox) return;
+    visible = items.filter(function (item) { return item.style.display !== 'none'; });
     lastFocused = document.activeElement;
     show(visible.indexOf(it));
     lightbox.classList.add('is-open');
@@ -197,29 +185,61 @@ var WA_PHONE = '+6281292624953';
   }
 
   function close() {
+    if (!lightbox) return;
     lightbox.classList.remove('is-open');
     document.body.style.overflow = '';
     if (lastFocused && lastFocused.focus) lastFocused.focus();
   }
 
-  items.forEach(function (it) {
-    it.addEventListener('click', function () { open(it); });
-  });
+  function bindTabs() {
+    if (tabsBound) return;
+    tabsBound = true;
+    tabs.forEach(function (tab) {
+      tab.addEventListener('click', function () {
+        tabs.forEach(function (t) {
+          t.classList.remove('is-active');
+          t.setAttribute('aria-selected', 'false');
+        });
+        tab.classList.add('is-active');
+        tab.setAttribute('aria-selected', 'true');
+        var album = tab.getAttribute('data-album');
+        items.forEach(function (it) {
+          it.style.display = (it.getAttribute('data-album') === album) ? '' : 'none';
+        });
+      });
+    });
+  }
 
-  lbClose.addEventListener('click', close);
-  document.getElementById('lbPrev').addEventListener('click', function () { show(index - 1); });
-  document.getElementById('lbNext').addEventListener('click', function () { show(index + 1); });
+  function bindLightbox() {
+    if (!lightbox || lightboxBound) return;
+    lightboxBound = true;
+    lbClose.addEventListener('click', close);
+    document.getElementById('lbPrev').addEventListener('click', function () { show(index - 1); });
+    document.getElementById('lbNext').addEventListener('click', function () { show(index + 1); });
+    lightbox.addEventListener('click', function (e) { if (e.target === lightbox) close(); });
+    document.addEventListener('keydown', function (e) {
+      if (!lightbox.classList.contains('is-open')) return;
+      if (e.key === 'Escape') close();
+      if (e.key === 'ArrowLeft') show(index - 1);
+      if (e.key === 'ArrowRight') show(index + 1);
+    });
+  }
 
-  lightbox.addEventListener('click', function (e) {
-    if (e.target === lightbox) close();
-  });
+  function bindItems() {
+    items.forEach(function (it) {
+      it.addEventListener('click', function () { open(it); });
+    });
+  }
 
-  document.addEventListener('keydown', function (e) {
-    if (!lightbox.classList.contains('is-open')) return;
-    if (e.key === 'Escape') close();
-    if (e.key === 'ArrowLeft') show(index - 1);
-    if (e.key === 'ArrowRight') show(index + 1);
-  });
+  function init() {
+    collectItems();
+    bindTabs();
+    bindItems();
+    bindLightbox();
+  }
+
+  init();
+  window.addEventListener('cms:ready', function () { init(); });
 })();
 
 /* ========================================================
