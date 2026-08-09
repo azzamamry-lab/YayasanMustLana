@@ -12,6 +12,28 @@ const path = require('path');
 const bcrypt = require('bcryptjs');
 const storage = require('./storage');
 
+/* ------------------------------------------------------------------
+   PENYIMPANAN SESI
+   - Produksi (DATABASE_URL terisi): sesi disimpan di PostgreSQL via
+     connect-pg-simple, sehingga login tetap bertahan walau server
+     tidur/bangun ulang di hosting gratis (Koyeb/Render).
+   - Lokal (tanpa DATABASE_URL): memori saja, sesuai uji coba JSON.
+   ------------------------------------------------------------------ */
+let sessionStore;
+if (process.env.DATABASE_URL) {
+  const pgSession = require('connect-pg-simple')(session);
+  const { Pool } = require('pg');
+  const pgPool = new Pool({
+    connectionString: process.env.DATABASE_URL,
+    ssl: { rejectUnauthorized: false }
+  });
+  sessionStore = new pgSession({
+    pool: pgPool,
+    tableName: 'session',
+    createTableIfMissing: true
+  });
+}
+
 const app = express();
 const PORT = process.env.PORT || 3002;
 
@@ -26,6 +48,7 @@ app.use(
   session({
     name: 'yayasan_admin_sid',
     secret: process.env.SESSION_SECRET || 'dev-session-secret-ganti-segera',
+    store: sessionStore,
     resave: false,
     saveUninitialized: false,
     cookie: {
