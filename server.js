@@ -307,6 +307,10 @@ const ADMIN_MIME = {
   '.ico': 'image/x-icon',
   '.txt': 'text/plain; charset=utf-8'
 };
+// Normalisasi /admin → /admin/ agar path relatif CSS/JS selalu benar
+// (akses /admin tanpa slash membuat browser mencari aset di /admin.css → 404)
+app.get('/admin', (req, res) => res.redirect(301, '/admin/'));
+
 app.use('/admin', (req, res, next) => {
   const rel = req.path === '/' ? 'index.html' : req.path.replace(/^\/+/, '');
   const file = path.resolve(adminDir, rel);

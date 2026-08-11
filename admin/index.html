@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Login Admin — Yayasan Bin Sef Al Khoiriyah</title>
-  <link rel="stylesheet" href="admin.css" />
+  <link rel="stylesheet" href="/admin/admin.css" />
 </head>
 <body>
   <div class="login-page">
@@ -33,13 +33,13 @@
     </div>
   </div>
 
-  <script src="admin.js"></script>
+  <script src="/admin/admin.js"></script>
   <script>
     (function () {
       // Sudah login? Langsung ke dashboard.
       fetch('/api/session')
         .then(function (r) { return r.json(); })
-        .then(function (s) { if (s.authed) window.location.href = 'dashboard.html'; })
+        .then(function (s) { if (s.authed) window.location.href = '/admin/dashboard.html'; })
         .catch(function () {});
 
       var form = document.getElementById('loginForm');
@@ -63,7 +63,7 @@
           .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, d: d }; }); })
           .then(function (res) {
             if (res.ok && res.d.success) {
-              window.location.href = 'dashboard.html';
+              window.location.href = '/admin/dashboard.html';
             } else {
               alertBox.textContent = (res.d && res.d.error) || 'Login gagal. Coba lagi.';
               alertBox.classList.add('show');
