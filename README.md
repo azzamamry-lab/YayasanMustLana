@@ -25,6 +25,9 @@ Website profil yayasan (HTML + CSS + JS murni, di-hosting di GitHub Pages) **plu
 └── .env.example       → contoh konfigurasi environment
 ```
 
+## 🌐 Deploy Live
+Backend + panel admin saat ini berjalan di **https://yayasan-must-lana.vercel.app** (Vercel + Neon PostgreSQL).
+
 ## ▶️ Menjalankan di komputer (lokal)
 
 ```bash
