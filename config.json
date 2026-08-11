@@ -88,7 +88,34 @@
   "social": {
     "instagram": "#",
     "youtube": "#",
-    "facebook": "#"
+    "facebook": "#",
+    "whatsapp": ""
+  },
+  "settings": {
+    "site_name": "Bin Sef Al Khoiriyah",
+    "site_tagline": "Yayasan Islam",
+    "logo_url": "",
+    "font": "plus-jakarta",
+    "colors": {
+      "primary": "#0f766e",
+      "primary_dark": "#115e59",
+      "accent": "#c89b3c",
+      "background": "#faf9f5"
+    },
+    "hero": {
+      "cta_text": "Jelajahi Program",
+      "cta_link": "program.html",
+      "secondary_text": "Tonton Video",
+      "secondary_link": "#video"
+    },
+    "sections": {
+      "tentang": true,
+      "program": true,
+      "video": true,
+      "galeri": true,
+      "berita": true,
+      "donasi": true
+    }
   },
   "stats": {
     "years": 10,

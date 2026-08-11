@@ -9,6 +9,7 @@
 const express = require('express');
 const session = require('express-session');
 const path = require('path');
+const fs = require('fs');
 const bcrypt = require('bcryptjs');
 const storage = require('./storage');
 
@@ -25,7 +26,9 @@ if (process.env.DATABASE_URL) {
   const { Pool } = require('pg');
   const pgPool = new Pool({
     connectionString: process.env.DATABASE_URL,
-    ssl: { rejectUnauthorized: false }
+    ssl: { rejectUnauthorized: false },
+    max: Number(process.env.PG_POOL_MAX || 1),
+    connectionTimeoutMillis: 10000
   });
   sessionStore = new pgSession({
     pool: pgPool,
@@ -40,6 +43,25 @@ const PORT = process.env.PORT || 3002;
 app.set('trust proxy', 1);
 app.use(express.json({ limit: '2mb' }));
 app.use(express.urlencoded({ extended: true }));
+
+/* ------------------------------------------------------------------
+   PASTIKAN STORAGE SIAP — penting di serverless (Vercel): saat cold
+   start, inisialisasi tabel & seed berjalan otomatis sebelum request
+   diproses. Idempoten, aman dipanggil di setiap request.
+   ------------------------------------------------------------------ */
+let storageReady = null;
+app.use((req, res, next) => {
+  if (!storageReady) {
+    storageReady = storage.init().catch((e) => {
+      storageReady = null; // izinkan coba lagi di request berikutnya
+      throw e;
+    });
+  }
+  storageReady.then(() => next(), (e) => {
+    console.error('❌ Inisialisasi storage gagal:', e && e.message);
+    res.status(500).json({ error: 'Penyimpanan belum siap. Coba lagi sebentar.' });
+  });
+});
 
 /* ------------------------------------------------------------------
    SESI ADMIN
@@ -270,25 +292,77 @@ app.delete('/api/berita/:id', requireAdmin, async (req, res) => {
    PANEL ADMIN (dashboard hanya untuk yang sudah login)
    ------------------------------------------------------------------ */
 app.get('/admin/dashboard.html', requireAdmin);
-app.use('/admin', express.static(path.join(__dirname, 'admin')));
+
+// Admin statis dilayani manual — di Vercel, express.static() diabaikan
+// (static hanya dari folder public/), jadi file panel dibaca dari disk.
+const adminDir = path.join(__dirname, 'admin');
+const ADMIN_MIME = {
+  '.html': 'text/html; charset=utf-8',
+  '.js': 'text/javascript; charset=utf-8',
+  '.css': 'text/css; charset=utf-8',
+  '.json': 'application/json; charset=utf-8',
+  '.svg': 'image/svg+xml',
+  '.png': 'image/png',
+  '.jpg': 'image/jpeg',
+  '.ico': 'image/x-icon',
+  '.txt': 'text/plain; charset=utf-8'
+};
+app.use('/admin', (req, res, next) => {
+  const rel = req.path === '/' ? 'index.html' : req.path.replace(/^\/+/, '');
+  const file = path.resolve(adminDir, rel);
+  // Cegah path traversal keluar dari folder admin
+  if (file !== adminDir && !file.startsWith(adminDir + path.sep)) {
+    return res.status(403).send('Forbidden');
+  }
+  fs.readFile(file, (err, data) => {
+    if (err) return res.status(404).send('Halaman tidak ditemukan');
+    res.setHeader('Content-Type', ADMIN_MIME[path.extname(file).toLowerCase()] || 'application/octet-stream');
+    res.send(data);
+  });
+});
 
 /* ------------------------------------------------------------------
    SITUS PUBLIK
+   - Vercel mengabaikan express.static() (statis ditangani CDN), jadi
+     halaman utama dilayani manual dari disk agar aman di kedua mode.
    ------------------------------------------------------------------ */
+app.get('/', (req, res) => {
+  fs.readFile(path.join(__dirname, 'public', 'index.html'), (err, data) => {
+    if (err) return res.status(404).send('Halaman tidak ditemukan');
+    res.setHeader('Content-Type', 'text/html; charset=utf-8');
+    res.send(data);
+  });
+});
+
 app.use(express.static(path.join(__dirname, 'public')));
 
 /* ------------------------------------------------------------------
-   START
+   ERROR HANDLER GLOBAL — pastikan error apa pun tidak mematikan
+   function (hindari FUNCTION_INVOCATION_FAILED di Vercel).
    ------------------------------------------------------------------ */
-storage.init().then(() => {
-  app.listen(PORT, () => {
-    console.log('==========================================================');
-    console.log('🚀 Backend Admin Yayasan Bin Sef Al Khoiriyah berjalan di:');
-    console.log(`   http://localhost:${PORT}         (situs publik)`);
-    console.log(`   http://localhost:${PORT}/admin/  (panel admin)`);
-    console.log('==========================================================');
-  });
-}).catch((e) => {
-  console.error('❌ Gagal menginisialisasi storage:', e);
-  process.exit(1);
+app.use((err, req, res, next) => {
+  console.error('❌ Error tidak tertangani:', err && err.message);
+  if (res.headersSent) return next(err);
+  res.status(500).json({ error: 'Terjadi kesalahan internal server.' });
 });
+
+/* ------------------------------------------------------------------
+   START — hanya saat dijalankan langsung (node server.js)
+   Di Vercel (serverless), file ini cukup diekspor sebagai handler.
+   ------------------------------------------------------------------ */
+if (!process.env.VERCEL && require.main === module) {
+  storage.init().then(() => {
+    app.listen(PORT, () => {
+      console.log('==========================================================');
+      console.log('🚀 Backend Admin Yayasan Bin Sef Al Khoiriyah berjalan di:');
+      console.log(`   http://localhost:${PORT}         (situs publik)`);
+      console.log(`   http://localhost:${PORT}/admin/  (panel admin)`);
+      console.log('==========================================================');
+    });
+  }).catch((e) => {
+    console.error('❌ Gagal menginisialisasi storage:', e);
+    process.exit(1);
+  });
+}
+
+module.exports = app;

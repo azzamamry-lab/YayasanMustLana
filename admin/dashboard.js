@@ -47,6 +47,7 @@
       hero: { title: v('f-hero-title'), subtitle: v('f-hero-subtitle'), image: v('f-hero-image') },
       about: {
         title: v('f-about-title'), description: v('f-about-description'),
+        image: v('f-about-image'),
         heading: v('f-about-heading'), body: v('f-about-body'),
         visi: v('f-about-visi'), misi: v('f-about-misi'),
         values: v('f-about-values').split('\n').map(function (s) { return s.trim(); }).filter(Boolean)
@@ -89,6 +90,7 @@
     set('f-hero-image', c.hero && c.hero.image);
     set('f-about-title', c.about && c.about.title);
     set('f-about-description', c.about && c.about.description);
+    set('f-about-image', c.about && c.about.image);
     set('f-about-heading', c.about && c.about.heading);
     set('f-about-body', c.about && c.about.body);
     set('f-about-visi', c.about && c.about.visi);
@@ -303,4 +305,161 @@
   });
 
   loadBerita();
+
+  /* ============================================================
+     TAMPILAN WEBSITE (tema, identitas, font, bagian halaman)
+     ============================================================ */
+  var SETTINGS_DEFAULTS = {
+    settings: {
+      site_name: 'Bin Sef Al Khoiriyah',
+      site_tagline: 'Yayasan Islam',
+      logo_url: '',
+      font: 'plus-jakarta',
+      colors: { primary: '#0f766e', primary_dark: '#115e59', accent: '#c89b3c', background: '#faf9f5' },
+      hero: {
+        cta_text: 'Jelajahi Program', cta_link: 'program.html',
+        secondary_text: 'Tonton Video', secondary_link: '#video'
+      },
+      sections: { tentang: true, program: true, video: true, galeri: true, berita: true, donasi: true }
+    },
+    social: { instagram: '#', youtube: '#', facebook: '#', whatsapp: '' }
+  };
+
+  function fillSettings(content) {
+    var s = (content && content.settings) || SETTINGS_DEFAULTS.settings;
+    var social = (content && content.social) || SETTINGS_DEFAULTS.social;
+
+    var set = function (id, val) {
+      var el = document.getElementById(id);
+      if (el) el.value = val == null ? '' : val;
+    };
+    var setChecked = function (id, val) {
+      var el = document.getElementById(id);
+      if (el) el.checked = !!val;
+    };
+
+    set('t-site-name', s.site_name);
+    set('t-site-tagline', s.site_tagline);
+    set('t-logo-url', s.logo_url);
+    set('t-font', s.font || 'plus-jakarta');
+    set('t-color-primary', (s.colors && s.colors.primary) || '#0f766e');
+    set('t-color-primary-dark', (s.colors && s.colors.primary_dark) || '#115e59');
+    set('t-color-accent', (s.colors && s.colors.accent) || '#c89b3c');
+    set('t-color-bg', (s.colors && s.colors.background) || '#faf9f5');
+    set('t-cta-text', s.hero && s.hero.cta_text);
+    set('t-cta-link', s.hero && s.hero.cta_link);
+    set('t-secondary-text', s.hero && s.hero.secondary_text);
+    set('t-secondary-link', s.hero && s.hero.secondary_link);
+    set('t-social-instagram', social.instagram);
+    set('t-social-youtube', social.youtube);
+    set('t-social-facebook', social.facebook);
+    set('t-social-whatsapp', social.whatsapp);
+
+    var sec = s.sections || {};
+    ['tentang', 'program', 'video', 'galeri', 'berita', 'donasi'].forEach(function (k) {
+      setChecked('t-sec-' + k, sec[k] !== false);
+    });
+    updateThemePreview();
+  }
+
+  function collectSettings() {
+    var v = function (id) { var el = document.getElementById(id); return el ? el.value.trim() : ''; };
+    var checked = function (id) { var el = document.getElementById(id); return el ? el.checked : true; };
+    return {
+      settings: {
+        site_name: v('t-site-name'),
+        site_tagline: v('t-site-tagline'),
+        logo_url: v('t-logo-url'),
+        font: v('t-font') || 'plus-jakarta',
+        colors: {
+          primary: v('t-color-primary'),
+          primary_dark: v('t-color-primary-dark'),
+          accent: v('t-color-accent'),
+          background: v('t-color-bg')
+        },
+        hero: {
+          cta_text: v('t-cta-text'),
+          cta_link: v('t-cta-link'),
+          secondary_text: v('t-secondary-text'),
+          secondary_link: v('t-secondary-link')
+        },
+        sections: {
+          tentang: checked('t-sec-tentang'),
+          program: checked('t-sec-program'),
+          video: checked('t-sec-video'),
+          galeri: checked('t-sec-galeri'),
+          berita: checked('t-sec-berita'),
+          donasi: checked('t-sec-donasi')
+        }
+      },
+      social: {
+        instagram: v('t-social-instagram'),
+        youtube: v('t-social-youtube'),
+        facebook: v('t-social-facebook'),
+        whatsapp: v('t-social-whatsapp')
+      }
+    };
+  }
+
+  // Pratinjau tema langsung saat mengubah warna
+  function updateThemePreview() {
+    var prev = $('#themePreview');
+    if (!prev) return;
+    var g = function (id) { var el = document.getElementById(id); return el ? el.value : ''; };
+    var primary = g('t-color-primary');
+    var dark = g('t-color-primary-dark');
+    var accent = g('t-color-accent');
+    var bg = g('t-color-bg');
+    var title = prev.querySelector('.tp-text strong');
+    if (title && dark) title.style.color = dark;
+    var btn = prev.querySelector('.tp-btn');
+    if (btn && primary) btn.style.background = primary;
+    var accentBtn = prev.querySelector('.tp-btn.tp-accent');
+    if (accentBtn && accent) accentBtn.style.background = accent;
+    if (bg) prev.style.background = bg;
+  }
+
+  ['t-color-primary', 't-color-primary-dark', 't-color-accent', 't-color-bg']
+    .forEach(function (id) {
+      var el = document.getElementById(id);
+      if (el) el.addEventListener('input', updateThemePreview);
+    });
+
+  var settingsStatus = $('#settingsStatus');
+
+  $('#settingsForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var btn = $('#btnSaveSettings');
+    btn.disabled = true;
+    btn.textContent = 'Menyimpan...';
+    settingsStatus.className = 'status';
+    settingsStatus.textContent = '';
+
+    api('/api/content', { method: 'PUT', body: JSON.stringify(collectSettings()) })
+      .then(function () {
+        showToast('✅ Tampilan berhasil disimpan.');
+        settingsStatus.textContent = 'Tersimpan.';
+      })
+      .catch(function (err) {
+        showToast(err.message, 'err');
+        settingsStatus.textContent = err.message;
+        settingsStatus.className = 'status err';
+      })
+      .then(function () {
+        btn.disabled = false;
+        btn.textContent = 'Simpan Tampilan';
+      });
+  });
+
+  $('#btnResetSettings').addEventListener('click', function () {
+    if (!confirm('Kembalikan semua pengaturan tampilan ke nilai bawaan?')) return;
+    fillSettings(SETTINGS_DEFAULTS);
+    showToast('Form dikembalikan ke bawaan. Klik "Simpan Tampilan" untuk menerapkan.');
+  });
+
+  api('/api/content').then(function (c) {
+    fillSettings(c);
+  }).catch(function () {
+    fillSettings(SETTINGS_DEFAULTS);
+  });
 })();

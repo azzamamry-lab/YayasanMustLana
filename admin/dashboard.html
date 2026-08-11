@@ -29,6 +29,7 @@
     <button class="tab is-active" role="tab" aria-selected="true" data-tab="konten">Konten Website</button>
     <button class="tab" role="tab" aria-selected="false" data-tab="galeri">Galeri Foto</button>
     <button class="tab" role="tab" aria-selected="false" data-tab="berita">Berita &amp; Pengumuman</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="tampilan">Tampilan</button>
   </nav>
 
   <!-- ================= PANEL: KONTEN ================= -->
@@ -63,6 +64,7 @@
           <div class="field"><label for="f-about-title">Judul section</label><input type="text" id="f-about-title" /></div>
           <div class="field"><label for="f-about-description">Deskripsi singkat</label><input type="text" id="f-about-description" /></div>
         </div>
+        <div class="field"><label for="f-about-image">URL foto tentang</label><input type="url" id="f-about-image" placeholder="https://..." /></div>
         <div class="field"><label for="f-about-heading">Judul isi</label><input type="text" id="f-about-heading" /></div>
         <div class="field"><label for="f-about-body">Paragraf isi</label><textarea id="f-about-body" rows="4"></textarea></div>
         <div class="grid-2">
@@ -214,6 +216,102 @@
     </div>
 
     <div class="item-list" id="beritaList"></div>
+  </section>
+
+  <!-- ================= PANEL: TAMPILAN ================= -->
+  <section class="panel" id="panel-tampilan">
+    <div class="panel-head">
+      <div>
+        <h2>Tampilan Website</h2>
+        <p>Ubah identitas, warna tema, font, tombol hero, dan bagian halaman yang tampil. Perubahan langsung diterapkan ke situs.</p>
+      </div>
+    </div>
+
+    <form id="settingsForm">
+      <div class="card">
+        <h3>Identitas &amp; Merek <span class="chip">Navbar &amp; footer</span></h3>
+        <div class="grid-2">
+          <div class="field"><label for="t-site-name">Nama yayasan</label><input type="text" id="t-site-name" /></div>
+          <div class="field"><label for="t-site-tagline">Tagline kecil <span class="hint">(mis. Yayasan Islam)</span></label><input type="text" id="t-site-tagline" /></div>
+        </div>
+        <div class="field">
+          <label for="t-logo-url">URL logo <span class="hint">— kosongkan untuk memakai ikon bawaan</span></label>
+          <input type="url" id="t-logo-url" placeholder="https://..." />
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Warna Tema <span class="chip">Pratinjau langsung</span></h3>
+        <div class="theme-preview" id="themePreview">
+          <div class="tp-text">
+            <strong>Pratinjau Tema</strong>
+            <span>Judul, tombol &amp; aksen memakai warna di samping</span>
+          </div>
+          <span class="tp-btn">Tombol utama</span>
+          <span class="tp-btn tp-accent">Aksen</span>
+        </div>
+        <div class="grid-2">
+          <div class="field"><label for="t-color-primary">Warna utama</label><input type="color" id="t-color-primary" value="#0f766e" /></div>
+          <div class="field"><label for="t-color-primary-dark">Warna utama (gelap)</label><input type="color" id="t-color-primary-dark" value="#115e59" /></div>
+          <div class="field"><label for="t-color-accent">Warna aksen</label><input type="color" id="t-color-accent" value="#c89b3c" /></div>
+          <div class="field"><label for="t-color-bg">Warna latar halaman</label><input type="color" id="t-color-bg" value="#faf9f5" /></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Tipografi <span class="chip">Font utama</span></h3>
+        <div class="field">
+          <label for="t-font">Font utama situs</label>
+          <select id="t-font">
+            <option value="plus-jakarta">Plus Jakarta Sans (bawaan)</option>
+            <option value="poppins">Poppins</option>
+            <option value="inter">Inter</option>
+            <option value="nunito">Nunito Sans</option>
+            <option value="merriweather">Merriweather (serif)</option>
+            <option value="lora">Lora (serif)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Tombol Hero <span class="chip">Halaman beranda</span></h3>
+        <div class="grid-2">
+          <div class="field"><label for="t-cta-text">Teks tombol utama</label><input type="text" id="t-cta-text" /></div>
+          <div class="field"><label for="t-cta-link">Tautan tombol utama</label><input type="text" id="t-cta-link" placeholder="program.html" /></div>
+          <div class="field"><label for="t-secondary-text">Teks tombol kedua</label><input type="text" id="t-secondary-text" /></div>
+          <div class="field"><label for="t-secondary-link">Tautan tombol kedua</label><input type="text" id="t-secondary-link" placeholder="#video" /></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Bagian Halaman <span class="chip">Beranda</span></h3>
+        <p class="panel-note">Centang bagian yang ingin ditampilkan di halaman depan website.</p>
+        <div class="toggle-grid">
+          <label class="toggle"><input type="checkbox" id="t-sec-tentang" checked /><span>Tentang</span></label>
+          <label class="toggle"><input type="checkbox" id="t-sec-program" checked /><span>Program</span></label>
+          <label class="toggle"><input type="checkbox" id="t-sec-video" checked /><span>Video</span></label>
+          <label class="toggle"><input type="checkbox" id="t-sec-galeri" checked /><span>Galeri</span></label>
+          <label class="toggle"><input type="checkbox" id="t-sec-berita" checked /><span>Berita</span></label>
+          <label class="toggle"><input type="checkbox" id="t-sec-donasi" checked /><span>CTA Donasi</span></label>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Media Sosial <span class="chip">Footer</span></h3>
+        <div class="grid-2">
+          <div class="field"><label for="t-social-instagram">Instagram</label><input type="url" id="t-social-instagram" placeholder="https://instagram.com/..." /></div>
+          <div class="field"><label for="t-social-youtube">YouTube</label><input type="url" id="t-social-youtube" /></div>
+          <div class="field"><label for="t-social-facebook">Facebook</label><input type="url" id="t-social-facebook" /></div>
+          <div class="field"><label for="t-social-whatsapp">WhatsApp</label><input type="url" id="t-social-whatsapp" placeholder="https://wa.me/62..." /></div>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary" id="btnSaveSettings">Simpan Tampilan</button>
+        <button type="button" class="btn btn-ghost" id="btnResetSettings">Kembalikan ke Bawaan</button>
+        <span class="status" id="settingsStatus"></span>
+      </div>
+    </form>
   </section>
 
   <script src="admin.js"></script>

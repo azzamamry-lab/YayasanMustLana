@@ -6,11 +6,17 @@
    ========================================================================== */
 
 const fs = require('fs');
+const os = require('os');
 const path = require('path');
 
 const configPath = path.join(__dirname, 'config.json');
 const DATA_DIR = path.join(__dirname, 'data');
-const DB_FILE = path.join(DATA_DIR, 'db.json');
+
+// Di Vercel (serverless) filesystem bersifat read-only kecuali /tmp,
+// jadi file JSON cadangan ditaruh di /tmp (ephemeral — untuk seed/konten
+// sementara). Untuk penyimpanan permanen tetap pakai PostgreSQL (DATABASE_URL).
+const DATA_DIR_ACTIVE = process.env.VERCEL ? path.join(os.tmpdir(), 'yayasan-data') : DATA_DIR;
+const DB_FILE = path.join(DATA_DIR_ACTIVE, 'db.json');
 
 let DEFAULTS = {};
 try {
@@ -80,7 +86,7 @@ function loadJson() {
 }
 
 function saveJson() {
-  fs.mkdirSync(DATA_DIR, { recursive: true });
+  fs.mkdirSync(path.dirname(DB_FILE), { recursive: true });
   fs.writeFileSync(DB_FILE, JSON.stringify(jsonCache, null, 2), 'utf8');
 }
 
@@ -95,7 +101,9 @@ function getPool() {
     const { Pool } = require('pg');
     pool = new Pool({
       connectionString: process.env.DATABASE_URL,
-      ssl: { rejectUnauthorized: false }
+      ssl: { rejectUnauthorized: false },
+      max: Number(process.env.PG_POOL_MAX || 1),
+      connectionTimeoutMillis: 10000
     });
   }
   return pool;
@@ -157,10 +165,23 @@ async function getContent() {
   return loadJson().content;
 }
 
+// Gabung dua objek secara mendalam (array langsung diganti, objek di-merge)
+function deepMerge(base, patch) {
+  if (Array.isArray(patch)) return patch;
+  if (patch && typeof patch === 'object') {
+    const out = Object.assign({}, base && typeof base === 'object' ? base : {});
+    Object.keys(patch).forEach((k) => {
+      out[k] = deepMerge(out[k], patch[k]);
+    });
+    return out;
+  }
+  return patch;
+}
+
 async function saveContent(obj) {
   // Gabungkan dengan konten lama agar update parsial tidak menghapus bagian lain
   const existing = await getContent();
-  const merged = Object.assign({}, existing, obj && typeof obj === 'object' ? obj : {});
+  const merged = deepMerge(existing, obj && typeof obj === 'object' ? obj : {});
   if (usePostgres()) {
     await getPool().query(
       `INSERT INTO cms_content (id, data) VALUES (1, $1)

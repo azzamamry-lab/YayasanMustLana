@@ -1,0 +1,19 @@
+# File rahasia lokal (.env.example tidak berisi rahasia, tetap boleh ikut)
+.env
+.env.*
+
+# Data lokal (berisi kredensial tunnel & db.json) — jangan pernah ter-upload
+data/
+
+# Workflow GitHub & dokumen
+.github/
+README.md
+*.md
+
+# Log & cache
+*.log
+npm-debug.log*
+
+# File lokal editor/OS
+.DS_Store
+Thumbs.db
