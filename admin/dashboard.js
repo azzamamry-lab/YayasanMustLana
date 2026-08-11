@@ -32,6 +32,20 @@
      ============================================================ */
   var loadedContent = null;
 
+  // Normalisasi teks Visi/Misi: pisahkan per baris baru ATAU spasi ganda panjang
+  // (sisa paste dari Word/Excel) menjadi baris-baris yang rapi.
+  function normalizeLines(text) {
+    var raw = String(text == null ? '' : text);
+    var lines = [];
+    raw.split(/\r?\n/).forEach(function (line) {
+      line.split(/\s{2,}/).forEach(function (part) {
+        part = part.trim();
+        if (part) lines.push(part);
+      });
+    });
+    return lines.join('\n');
+  }
+
   function collectContent() {
     var v = function (id) { var el = document.getElementById(id); return el ? el.value.trim() : ''; };
     var prevVideos = (loadedContent && loadedContent.videos) || [];
@@ -49,7 +63,7 @@
         title: v('f-about-title'), description: v('f-about-description'),
         image: v('f-about-image'),
         heading: v('f-about-heading'), body: v('f-about-body'),
-        visi: v('f-about-visi'), misi: v('f-about-misi'),
+        visi: normalizeLines(v('f-about-visi')), misi: normalizeLines(v('f-about-misi')),
         values: v('f-about-values').split('\n').map(function (s) { return s.trim(); }).filter(Boolean)
       },
       programs: { title: v('f-programs-title'), subtitle: v('f-programs-subtitle'), items: items },
@@ -93,8 +107,8 @@
     set('f-about-image', c.about && c.about.image);
     set('f-about-heading', c.about && c.about.heading);
     set('f-about-body', c.about && c.about.body);
-    set('f-about-visi', c.about && c.about.visi);
-    set('f-about-misi', c.about && c.about.misi);
+    set('f-about-visi', normalizeLines(c.about && c.about.visi));
+    set('f-about-misi', normalizeLines(c.about && c.about.misi));
     set('f-about-values', c.about && c.about.values ? c.about.values.join('\n') : '');
     set('f-programs-title', c.programs && c.programs.title);
     set('f-programs-subtitle', c.programs && c.programs.subtitle);

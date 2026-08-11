@@ -187,6 +187,43 @@
   }
 
   /* ---------------- KONTEN TEKS ---------------- */
+  // Ubah teks multi-baris (atau berisi spasi ganda panjang — sisa paste dari
+  // Word/Excel) menjadi poin-poin terpisah. Contoh:
+  //   "A\nB\nC" atau "A    B      C"  →  ["A", "B", "C"]
+  function splitPoints(text) {
+    var raw = String(text == null ? '' : text);
+    // 1) Pisahkan per baris baru
+    var lines = raw.split(/\r?\n/);
+    var out = [];
+    lines.forEach(function (line) {
+      // 2) Dalam satu baris, pisahkan bila ada 2+ spasi berurutan
+      line.split(/\s{2,}/).forEach(function (part) {
+        part = part.trim();
+        if (part) out.push(part);
+      });
+    });
+    return out;
+  }
+
+  // Render elemen <p> Visi/Misi: lebih dari satu poin → daftar bullet;
+  // satu kalimat → teks biasa (seperti sebelumnya).
+  function applyMvPoints(pEl, text) {
+    if (!pEl || !text) return;
+    var points = splitPoints(text);
+    if (points.length <= 1) {
+      pEl.textContent = text;
+      return;
+    }
+    var ul = document.createElement('ul');
+    ul.className = 'mv-points';
+    points.forEach(function (pt) {
+      var li = document.createElement('li');
+      li.textContent = pt;
+      ul.appendChild(li);
+    });
+    pEl.parentNode.replaceChild(ul, pEl);
+  }
+
   function applyContent(c) {
     if (!c) return;
 
@@ -211,8 +248,8 @@
       if (aboutImg && c.about.image) aboutImg.src = c.about.image;
       var mv = document.querySelectorAll('.mv-card p');
       if (mv.length >= 2) {
-        if (c.about.visi) mv[0].textContent = c.about.visi;
-        if (c.about.misi) mv[1].textContent = c.about.misi;
+        applyMvPoints(mv[0], c.about.visi);
+        applyMvPoints(mv[1], c.about.misi);
       }
       if (c.about.values && c.about.values.length) {
         var ul = document.querySelector('.value-list');
